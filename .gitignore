@@ -1,0 +1,9 @@
+.env
+.node_modules
+
+#logs
+*.log
+
+#compiled binary files
+*.exe
+*.out

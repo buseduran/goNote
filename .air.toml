@@ -4,7 +4,7 @@ tmp_dir = "tmp"
 [build]
 bin = "tmp\\main.exe"
 cmd = "go build -o tmp/main.exe ."
-full_bin = "C:/Users/Nilvera/Desktop/goNote/tmp/main.exe"
+full_bin = "D:/buwu/goNote/tmp/main.exe"
 delay = 1000
 exclude_dir = ["tmp", "vendor"]
 include_ext = ["go"]
