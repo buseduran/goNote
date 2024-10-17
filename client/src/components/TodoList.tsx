@@ -1,6 +1,7 @@
 import { Stack, Text } from "@chakra-ui/react"
 import TodoItem from "./TodoItem"
 import { useQuery } from "@tanstack/react-query"
+import { BASE_URL } from "../App"
 
 export type Todo = {
     _id: number
@@ -17,7 +18,7 @@ const TodoList = () =>
         {
             try
             {
-                const response = await fetch("http://localhost:5000/api/todos")
+                const response = await fetch(BASE_URL + "/api/todos")
                 const data = await response.json()
                 if (!response.ok)
                 {
