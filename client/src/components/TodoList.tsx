@@ -1,7 +1,6 @@
 import { Stack, Text } from "@chakra-ui/react"
 import TodoItem from "./TodoItem"
 import { useQuery } from "@tanstack/react-query"
-import { BASE_URL } from "../App"
 
 export type Todo = {
     _id: number
