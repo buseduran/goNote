@@ -17,7 +17,7 @@ const TodoForm = () =>
             e.preventDefault()
             try
             {
-                const response = await fetch(BASE_URL + "/todos", {
+                const response = await fetch("/api/todos", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

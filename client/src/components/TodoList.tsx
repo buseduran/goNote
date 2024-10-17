@@ -18,7 +18,7 @@ const TodoList = () =>
         {
             try
             {
-                const response = await fetch(BASE_URL + "/todos")
+                const response = await fetch("/api/todos")
                 const data = await response.json()
                 if (!response.ok)
                 {

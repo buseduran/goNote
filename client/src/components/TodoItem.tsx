@@ -17,7 +17,7 @@ const TodoItem = ({ todo }: { todo: Todo }) =>
 
             try
             {
-                const response = await fetch(BASE_URL + `/todos/${ todo._id }`, {
+                const response = await fetch(`/api/todos/${ todo._id }`, {
                     method: "PATCH"
                 })
                 const data = await response.json()
@@ -43,7 +43,7 @@ const TodoItem = ({ todo }: { todo: Todo }) =>
         {
             try
             {
-                const response = await fetch(BASE_URL + `/todos/${ todo._id }`, {
+                const response = await fetch(`/api/todos/${ todo._id }`, {
                     method: "DELETE"
                 })
                 const data = await response.json()
