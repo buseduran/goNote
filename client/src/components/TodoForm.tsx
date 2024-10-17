@@ -1,19 +1,56 @@
 import { Button, Flex, Input, Spinner } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
+import { BASE_URL } from "../App";
+import { th } from "framer-motion/client";
 
 const TodoForm = () =>
 {
     const [newTodo, setNewTodo] = useState("");
     const [isPending, setIsPending] = useState(false);
 
-    const createTodo = async (e: React.FormEvent) =>
-    {
-        e.preventDefault();
-        alert("Todo added!");
-    };
+    const queryClient = useQueryClient();
+
+    const { mutate: createTodo, isPending: isCreating } = useMutation({
+        mutationKey: ["createTodo"],
+        mutationFn: async (e: React.FormEvent) =>
+        {
+            e.preventDefault()
+            try
+            {
+                const response = await fetch(BASE_URL + "/todos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ body: newTodo })
+                })
+                const data = await response.json()
+                console.log(data)
+                if (!response.ok)
+                {
+                    throw new Error(data.message)
+                }
+                setNewTodo("")
+                return data
+            }
+            catch (error: any)
+            {
+                throw new Error(error.message)
+            }
+        },
+        onSuccess: () =>
+        {
+            queryClient.invalidateQueries({ queryKey: ["todos"] })
+        },
+        onError: (error: any) =>
+        {
+            alert(error.message)
+        }
+    })
     return (
-        <form onSubmit={ createTodo }>
+        <form onSubmit={ (e) => { e.preventDefault(); createTodo(e); } }>
             <Flex >
                 <Input
                     type='text'
@@ -26,7 +63,7 @@ const TodoForm = () =>
                     type='submit'
 
                 >
-                    { isPending ? <Spinner size={ "xs" } /> : <IoMdAdd size={ 30 } /> }
+                    { isCreating ? <Spinner size={ "xs" } /> : <IoMdAdd size={ 30 } /> }
                 </Button>
             </Flex>
         </form>

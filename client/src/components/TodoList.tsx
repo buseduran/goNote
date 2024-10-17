@@ -1,22 +1,38 @@
 import { Stack, Text } from "@chakra-ui/react"
-import { useState } from "react"
 import TodoItem from "./TodoItem"
+import { useQuery } from "@tanstack/react-query"
+
+export type Todo = {
+    _id: number
+    body: string
+    completed: boolean
+}
 
 const TodoList = () =>
 {
-    const [isLoading, setIsLoading] = useState(true)
-    const todos = [
+    //fetch datas
+    const { data: todos, isLoading } = useQuery<Todo[]>({
+        queryKey: ["todos"],
+        queryFn: async () =>
         {
-            id: 1,
-            body: "Task 1",
-            completed: false
-        },
-        {
-            id: 2,
-            body: "Task 2",
-            completed: true
+            try
+            {
+                const response = await fetch("http://localhost:5000/api/todos")
+                const data = await response.json()
+                if (!response.ok)
+                {
+                    throw new Error(data.message || "Something went wrong")
+                }
+                return data || []
+            }
+            catch (error)
+            {
+                console.log(error)
+            }
         }
-    ]
+
+    })
+
     return (
         <>
             <Text textTransform={ "uppercase" }
@@ -38,8 +54,8 @@ const TodoList = () =>
             )
             }
             <Stack gap={ 3 }>
-                { todos.map((todo) => (
-                    <TodoItem key={ todo.id } todo={ todo } />
+                { todos?.map((todo) => (
+                    <TodoItem key={ todo._id } todo={ todo } />
                 )) }
             </Stack>
         </>

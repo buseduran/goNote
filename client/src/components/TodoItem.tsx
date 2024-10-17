@@ -1,9 +1,69 @@
-import { Badge, Box, Flex, Text } from '@chakra-ui/react'
+import { Badge, Box, Flex, Spinner, Text } from '@chakra-ui/react'
 import { FaCheckCircle } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
+import { Todo } from './TodoList'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { a } from 'framer-motion/client'
+import { BASE_URL } from '../App'
 
-const TodoItem = ({ todo }: { todo: any }) =>
+const TodoItem = ({ todo }: { todo: Todo }) =>
 {
+    const queryClient = useQueryClient()
+    const { mutate: updateTodo, isPending: isUpdating } = useMutation({
+        mutationKey: ["updateTodo"],
+        mutationFn: async () =>
+        {
+            if (todo.completed)
+                return alert("Task already completed")
+
+            try
+            {
+                const response = await fetch(BASE_URL + `/todos/${ todo._id }`, {
+                    method: "PATCH"
+                })
+                const data = await response.json()
+                if (!response.ok)
+                {
+                    throw new Error(data.message || "Something went wrong")
+                }
+                return data
+            }
+            catch (error)
+            {
+                console.log(error)
+            }
+        },
+        onSuccess: () =>
+        {
+            queryClient.invalidateQueries({ queryKey: ["todos"] })
+        }
+    })
+    const { mutate: deleteTodo, isPending: isDeleting } = useMutation({
+        mutationKey: ["deleteTodo"],
+        mutationFn: async () =>
+        {
+            try
+            {
+                const response = await fetch(BASE_URL + `/todos/${ todo._id }`, {
+                    method: "DELETE"
+                })
+                const data = await response.json()
+                if (!response.ok)
+                {
+                    throw new Error(data.message || "Something went wrong")
+                }
+                return data
+            }
+            catch (error)
+            {
+                console.log(error)
+            }
+        },
+        onSuccess: () =>
+        {
+            queryClient.invalidateQueries({ queryKey: ["todos"] })
+        }
+    })
     return (
         <Flex alignItems={ "center" } gap={ 3 }>
             <Flex
@@ -31,11 +91,13 @@ const TodoItem = ({ todo }: { todo: any }) =>
                 ) }
             </Flex>
             <Flex alignItems={ "center" } gap={ 2.5 }>
-                <Box color={ "green.500" } cursor={ "pointer" }>
-                    <FaCheckCircle size={ 20 } />
+                <Box color={ "green.500" } cursor={ "pointer" } onClick={ () => updateTodo() }>
+                    { !isUpdating && <FaCheckCircle size={ 20 } /> }
+                    { isUpdating && <Spinner size={ "sm" } /> }
                 </Box>
-                <Box color={ "red.500" } cursor={ "pointer" }>
-                    <MdDelete size={ 20 } />
+                <Box color={ "red.500" } cursor={ "pointer" } onClick={ () => deleteTodo() }>
+                    { isDeleting && <Spinner size={ "sm" } /> }
+                    { !isDeleting && <MdDelete size={ 20 } /> }
                 </Box>
             </Flex>
         </Flex>
