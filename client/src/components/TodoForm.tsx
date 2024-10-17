@@ -3,12 +3,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { BASE_URL } from "../App";
-import { th } from "framer-motion/client";
 
 const TodoForm = () =>
 {
     const [newTodo, setNewTodo] = useState("");
-    const [isPending, setIsPending] = useState(false);
 
     const queryClient = useQueryClient();
 

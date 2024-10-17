@@ -65,7 +65,7 @@ func main() {
 	port := os.Getenv("PORT")
 
 	if os.Getenv("ENV") == "production" {
-		app.Static("/", "./client/src")
+		app.Static("/", "./client/dist")
 	}
 	log.Fatal(app.Listen("0.0.0.0:" + port))
 }
