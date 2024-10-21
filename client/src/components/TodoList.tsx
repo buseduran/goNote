@@ -17,7 +17,7 @@ const TodoList = () =>
         {
             try
             {
-                const response = await fetch("/api/todos")
+                const response = await fetch("http://localhost:5000/api/todos")
                 const data = await response.json()
                 if (!response.ok)
                 {
@@ -30,7 +30,6 @@ const TodoList = () =>
                 console.log(error)
             }
         }
-
     })
 
     return (
