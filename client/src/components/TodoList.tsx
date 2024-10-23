@@ -11,7 +11,7 @@ export type Todo = {
 const TodoList = () =>
 {
     //fetch datas
-    const { data: todos, isLoading } = useQuery<Todo[]>({
+    const { data: todos, isLoading, error } = useQuery<Todo[]>({
         queryKey: ["todos"],
         queryFn: async () =>
         {
@@ -32,6 +32,15 @@ const TodoList = () =>
         }
     })
 
+    if (isLoading)
+    {
+        return <Text>Loading...</Text>
+    }
+    if (error)
+    {
+        return <Text>Error: { error.message }</Text>
+    }
+
     return (
         <>
             <Text textTransform={ "uppercase" }
@@ -41,7 +50,7 @@ const TodoList = () =>
                 my={ 2 }
                 bgGradient='linear(to-l, purple.600, #00ffff)'
                 bgClip={ "text" }>
-                Today's Tasks
+                Tasks
             </Text >
             { !isLoading && todos?.length === 0 && (
                 <Stack>

@@ -83,7 +83,10 @@ func getTodos(c *fiber.Ctx) error {
 	for cursor.Next(context.Background()) {
 		var todo Todo
 		if err := cursor.Decode(&todo); err != nil {
-			return err
+			fmt.Printf("Decode error: %v\n", err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "Failed to decode todo",
+			})
 		}
 		todos = append(todos, todo)
 	}
@@ -109,12 +112,20 @@ func createTodo(c *fiber.Ctx) error {
 }
 func updateTodo(c *fiber.Ctx) error {
 	id := c.Params("id")
+	var completed struct {
+		Completed bool `json:"completed"`
+	}
+
+	if err := c.BodyParser(&completed); err != nil {
+		return err
+	}
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-
+		return err
 	}
+
 	filter := bson.M{"_id": objectID}
-	update := bson.M{"$set": bson.M{"completed": true}}
+	update := bson.M{"$set": bson.M{"completed": completed.Completed}}
 
 	_, err = collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
