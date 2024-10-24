@@ -1,4 +1,4 @@
-module github.com/buwud/Note-n-Go
+module github.com/buwud/goNote
 
 go 1.23.2
 

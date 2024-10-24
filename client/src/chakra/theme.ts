@@ -14,6 +14,10 @@ const theme = extendTheme({
             body: {
                 backgroundColor: mode("gray.500", "")(props),
             },
+
+
+
+            
         }),
     },
 });
