@@ -6,20 +6,22 @@ import (
 
 	"github.com/buwud/goNote/db"
 	"github.com/buwud/goNote/domain"
+	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type todoRepository struct {
-	db db.Database
+	db db.Collection
 }
 
-func NewTodoRepository(database db.Database) *todoRepository {
+func NewTodoRepository(database db.Collection) *todoRepository {
 	return &todoRepository{db: database}
 }
 
 func (t *todoRepository) GetAll() (*[]domain.Todo, error) {
 	var todos []domain.Todo
-	cursor, err := t.db.DB.Collection("todos").Find(context.Background(), bson.M{})
+	cursor, err := t.db.TodoCollection.Find(context.Background(), bson.M{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,4 +32,8 @@ func (t *todoRepository) GetAll() (*[]domain.Todo, error) {
 		todos = append(todos, todo)
 	}
 	return &todos, nil
+}
+
+func (t *todoRepository) CreateTodo(todo *domain.Todo, c *fiber.Ctx) (*mongo.InsertOneResult, error) {
+	return t.db.TodoCollection.InsertOne(context.Background(), todo)
 }

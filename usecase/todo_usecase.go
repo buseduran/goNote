@@ -1,6 +1,10 @@
 package usecase
 
-import "github.com/buwud/goNote/domain"
+import (
+	"github.com/buwud/goNote/domain"
+	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/mongo"
+)
 
 type todoUseCase struct {
 	todoRepo domain.TodoRepository
@@ -12,4 +16,8 @@ func NewTodoUseCase(todoRepo domain.TodoRepository) (domain.TodoUseCase, error) 
 
 func (t *todoUseCase) GetAll() (*[]domain.Todo, error) {
 	return t.todoRepo.GetAll()
+}
+
+func (t *todoUseCase) CreateTodo(todo *domain.Todo, ctx *fiber.Ctx) (*mongo.InsertOneResult, error) {
+	return t.todoRepo.CreateTodo(todo, ctx)
 }

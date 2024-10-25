@@ -9,7 +9,7 @@ import (
 )
 
 func NewTodoRouter(publicRouter fiber.Router) {
-	todoRepo := repository.NewTodoRepository(db.GetConnection())
+	todoRepo := repository.NewTodoRepository(db.GetTodoCollection())
 	todoUseCase, err := usecase.NewTodoUseCase(todoRepo)
 	if err != nil {
 		publicRouter.Use(func(c *fiber.Ctx) error {
@@ -22,5 +22,6 @@ func NewTodoRouter(publicRouter fiber.Router) {
 	}
 
 	publicRouter.Get("/todos", todoController.GetAll)
+	publicRouter.Post("/todos", todoController.CreateTodo)
 
 }

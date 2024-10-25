@@ -13,6 +13,9 @@ import (
 type Database struct {
 	DB *mongo.Database
 }
+type Collection struct {
+	TodoCollection *mongo.Collection
+}
 
 func GetConnection() Database {
 	MONGODB_CONNECTION := os.Getenv(("MONGODB_CONNECTION"))
@@ -30,5 +33,12 @@ func GetConnection() Database {
 	fmt.Println(("Connected to MongoDB ATLAS!"))
 	return Database{
 		DB: client.Database("golang_db"),
+	}
+}
+
+func GetTodoCollection() Collection {
+	collection := GetConnection().DB.Collection("todos")
+	return Collection{
+		TodoCollection: collection,
 	}
 }

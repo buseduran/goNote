@@ -62,7 +62,7 @@ func main() {
 	route.SetupRoutes(app)
 
 	//app.Get("/api/todos", getTodos)
-	app.Post("/api/todos", createTodo)
+	//app.Post("/api/todos", createTodo)
 	app.Patch("/api/todos/:id", updateTodo)
 	app.Delete("/api/todos/:id", deleteTodo)
 
@@ -95,24 +95,24 @@ func main() {
 //		}
 //		return c.JSON(todos)
 //	}
-func createTodo(c *fiber.Ctx) error {
-	todo := new(Todo)
+// func createTodo(c *fiber.Ctx) error {
+// 	todo := new(Todo)
 
-	if err := c.BodyParser(todo); err != nil {
-		return err
-	}
+// 	if err := c.BodyParser(todo); err != nil {
+// 		return err
+// 	}
 
-	if todo.Body == "" {
-		return c.Status(400).JSON(fiber.Map{"error": "todo body cannot be empty"})
-	}
-	result, err := collection.InsertOne(context.Background(), todo)
+// 	if todo.Body == "" {
+// 		return c.Status(400).JSON(fiber.Map{"error": "todo body cannot be empty"})
+// 	}
+// 	result, err := collection.InsertOne(context.Background(), todo)
 
-	if err != nil {
-		return err
-	}
-	todo.ID = result.InsertedID.(primitive.ObjectID)
-	return c.Status(201).JSON(todo)
-}
+//		if err != nil {
+//			return err
+//		}
+//		todo.ID = result.InsertedID.(primitive.ObjectID)
+//		return c.Status(201).JSON(todo)
+//	}
 func updateTodo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var completed struct {

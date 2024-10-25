@@ -1,7 +1,9 @@
 package domain
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -23,8 +25,10 @@ func (todo *Todo) ResponseMap() {
 
 type TodoRepository interface {
 	GetAll() (*[]Todo, error)
+	CreateTodo(todo *Todo, c *fiber.Ctx) (*mongo.InsertOneResult, error)
 }
 
 type TodoUseCase interface {
 	GetAll() (*[]Todo, error)
+	CreateTodo(todo *Todo, c *fiber.Ctx) (*mongo.InsertOneResult, error)
 }
