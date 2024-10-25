@@ -1,7 +1,11 @@
-package models
+package domain
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+const (
+	CollectionTodo = "todos"
 )
 
 type Todo struct {
@@ -15,4 +19,12 @@ func (todo *Todo) ResponseMap() {
 	response["_id"] = todo.ID
 	response["completed"] = todo.Completed
 	response["body"] = todo.Body
+}
+
+type TodoRepository interface {
+	GetAll() (*[]Todo, error)
+}
+
+type TodoUseCase interface {
+	GetAll() (*[]Todo, error)
 }

@@ -21,7 +21,7 @@ func GetConnection() Database {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer client.Disconnect(context.Background())
+	//defer client.Disconnect(context.Background())
 
 	err = client.Ping(context.Background(), nil)
 	if err != nil {

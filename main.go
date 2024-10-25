@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/buwud/goNote/api/route"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
@@ -58,7 +59,9 @@ func main() {
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
-	app.Get("/api/todos", getTodos)
+	route.SetupRoutes(app)
+
+	//app.Get("/api/todos", getTodos)
 	app.Post("/api/todos", createTodo)
 	app.Patch("/api/todos/:id", updateTodo)
 	app.Delete("/api/todos/:id", deleteTodo)
@@ -71,27 +74,27 @@ func main() {
 	log.Fatal(app.Listen("0.0.0.0:" + port))
 }
 
-func getTodos(c *fiber.Ctx) error {
-	var todos []Todo
-	//cursor is like a pointer to the result set
-	cursor, err := collection.Find(context.Background(), bson.M{})
-	if err != nil {
-		return err
-	}
-	//postpone the execution of a function until the surrounding one ends
-	defer cursor.Close(context.Background())
-	for cursor.Next(context.Background()) {
-		var todo Todo
-		if err := cursor.Decode(&todo); err != nil {
-			fmt.Printf("Decode error: %v\n", err)
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Failed to decode todo",
-			})
-		}
-		todos = append(todos, todo)
-	}
-	return c.JSON(todos)
-}
+//	func getTodos(c *fiber.Ctx) error {
+//		var todos []Todo
+//		//cursor is like a pointer to the result set
+//		cursor, err := collection.Find(context.Background(), bson.M{})
+//		if err != nil {
+//			return err
+//		}
+//		//postpone the execution of a function until the surrounding one ends
+//		defer cursor.Close(context.Background())
+//		for cursor.Next(context.Background()) {
+//			var todo Todo
+//			if err := cursor.Decode(&todo); err != nil {
+//				fmt.Printf("Decode error: %v\n", err)
+//				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+//					"error": "Failed to decode todo",
+//				})
+//			}
+//			todos = append(todos, todo)
+//		}
+//		return c.JSON(todos)
+//	}
 func createTodo(c *fiber.Ctx) error {
 	todo := new(Todo)
 
