@@ -8,6 +8,7 @@ import (
 	"github.com/buwud/goNote/domain"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -36,4 +37,17 @@ func (t *todoRepository) GetAll() (*[]domain.Todo, error) {
 
 func (t *todoRepository) CreateTodo(todo *domain.Todo, c *fiber.Ctx) (*mongo.InsertOneResult, error) {
 	return t.db.TodoCollection.InsertOne(context.Background(), todo)
+}
+
+func (t *todoRepository) UpdateTodo(id primitive.ObjectID, todo *domain.Todo, c *fiber.Ctx) error {
+	filter := bson.M{"_id": id}
+	update := bson.M{"$set": bson.M{
+		"completed": todo.Completed,
+		"body":      todo.Body,
+	}}
+	_, err := t.db.TodoCollection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return err
+	}
+	return nil
 }
