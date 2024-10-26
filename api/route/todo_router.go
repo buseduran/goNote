@@ -23,5 +23,6 @@ func NewTodoRouter(publicRouter fiber.Router) {
 
 	publicRouter.Get("/todos", todoController.GetAll)
 	publicRouter.Post("/todos", todoController.CreateTodo)
-
+	publicRouter.Patch("/todos/:id", todoController.UpdateTodo)
+	publicRouter.Delete("/todos/:id", todoController.DeleteTodo)
 }

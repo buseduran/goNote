@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"github.com/buwud/goNote/domain/models"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -26,9 +27,13 @@ func (todo *Todo) ResponseMap() {
 type TodoRepository interface {
 	GetAll() (*[]Todo, error)
 	CreateTodo(todo *Todo, c *fiber.Ctx) (*mongo.InsertOneResult, error)
+	UpdateTodo(id string, todo *models.Todo, c *fiber.Ctx) error
+	DeleteTodo(id string, c *fiber.Ctx) error
 }
 
 type TodoUseCase interface {
 	GetAll() (*[]Todo, error)
 	CreateTodo(todo *Todo, c *fiber.Ctx) (*mongo.InsertOneResult, error)
+	UpdateTodo(id string, todo *models.Todo, c *fiber.Ctx) error
+	DeleteTodo(id string, c *fiber.Ctx) error
 }
