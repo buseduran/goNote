@@ -17,11 +17,12 @@ type Todo struct {
 	Body      string             `json:"body"`
 }
 
-func (todo *Todo) ResponseMap() {
+func (todo *Todo) ResponseMap() map[string]interface{} {
 	response := make(map[string]interface{})
 	response["_id"] = todo.ID
 	response["completed"] = todo.Completed
 	response["body"] = todo.Body
+	return response
 }
 
 type TodoRepository interface {
