@@ -7,8 +7,10 @@
 #compiled binary files
 *.exe
 *.out
+.air.toml
 
 #folders
 tmp/
 client/package.json
 client/package-lock.json
+.vscode/settings.json
