@@ -36,11 +36,11 @@ func (t *todoRepository) GetAll() (*[]domain.Todo, error) {
 	return &todos, nil
 }
 
-func (t *todoRepository) CreateTodo(todo *domain.Todo, c *fiber.Ctx) (*mongo.InsertOneResult, error) {
+func (t *todoRepository) CreateTodo(todo *domain.Todo) (*mongo.InsertOneResult, error) {
 	return t.db.TodoCollection.InsertOne(context.Background(), todo)
 }
 
-func (t *todoRepository) UpdateTodo(id string, todo *models.Todo, c *fiber.Ctx) error {
+func (t *todoRepository) UpdateTodo(id string, todo *models.Todo) error {
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err

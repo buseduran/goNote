@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/buwud/goNote/domain"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -15,6 +16,7 @@ type Database struct {
 }
 type Collection struct {
 	TodoCollection *mongo.Collection
+	UserCollection *mongo.Collection
 }
 
 func GetConnection() Database {
@@ -37,8 +39,14 @@ func GetConnection() Database {
 }
 
 func GetTodoCollection() Collection {
-	collection := GetConnection().DB.Collection("todos")
+	collection := GetConnection().DB.Collection(domain.CollectionTodo)
 	return Collection{
 		TodoCollection: collection,
+	}
+}
+func GetUserCollection() Collection {
+	collection := GetConnection().DB.Collection(domain.CollectionUser)
+	return Collection{
+		UserCollection: collection,
 	}
 }

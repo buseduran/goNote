@@ -19,11 +19,11 @@ func (t *todoUseCase) GetAll() (*[]domain.Todo, error) {
 	return t.todoRepo.GetAll()
 }
 
-func (t *todoUseCase) CreateTodo(todo *domain.Todo, ctx *fiber.Ctx) (*mongo.InsertOneResult, error) {
-	return t.todoRepo.CreateTodo(todo, ctx)
+func (t *todoUseCase) CreateTodo(todo *domain.Todo) (*mongo.InsertOneResult, error) {
+	return t.todoRepo.CreateTodo(todo)
 }
-func (t *todoUseCase) UpdateTodo(id string, todo *models.Todo, c *fiber.Ctx) error {
-	return t.todoRepo.UpdateTodo(id, todo, c)
+func (t *todoUseCase) UpdateTodo(id string, todo *models.Todo) error {
+	return t.todoRepo.UpdateTodo(id, todo)
 }
 func (t *todoUseCase) DeleteTodo(id string, c *fiber.Ctx) error {
 	return t.todoRepo.DeleteTodo(id, c)

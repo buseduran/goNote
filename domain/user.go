@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -22,6 +23,14 @@ type User struct {
 	UpdatedAt time.Time          `json:"updated_at,omitempty"`
 }
 
+type UserSignup struct {
+	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	Username  string             `form:"username" binding:"required"`
+	Password  string             `form:"password" binding:"required"`
+	FirstName string             `form:"firstname"`
+	LastName  string             `form:"lastname"`
+}
+
 func (user *User) ResponseMap() map[string]interface{} {
 	response := make(map[string]interface{})
 	response["id"] = user.ID
@@ -36,9 +45,9 @@ func (user *User) ResponseMap() map[string]interface{} {
 }
 
 type UserRepository interface {
-	//signup, signin, updateprofile
+	SignUp(user *UserSignup) (*mongo.InsertOneResult, error)
 }
 
 type UserUseCase interface {
-	//signup, signin, updateprofile
+	SignUp(user *UserSignup) (*mongo.InsertOneResult, error)
 }

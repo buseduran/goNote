@@ -29,7 +29,7 @@ func (todoController *TodoController) CreateTodo(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "todo body cannot be empty"})
 	}
 
-	result, err := todoController.TodoUseCase.CreateTodo(todo, c)
+	result, err := todoController.TodoUseCase.CreateTodo(todo)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -46,7 +46,7 @@ func (todoController *TodoController) UpdateTodo(c *fiber.Ctx) error {
 	if todo.Body == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "todo body cannot be empty"})
 	}
-	err := todoController.TodoUseCase.UpdateTodo(id, todo, c)
+	err := todoController.TodoUseCase.UpdateTodo(id, todo)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}

@@ -27,14 +27,14 @@ func (todo *Todo) ResponseMap() map[string]interface{} {
 
 type TodoRepository interface {
 	GetAll() (*[]Todo, error)
-	CreateTodo(todo *Todo, c *fiber.Ctx) (*mongo.InsertOneResult, error)
-	UpdateTodo(id string, todo *models.Todo, c *fiber.Ctx) error
+	CreateTodo(todo *Todo) (*mongo.InsertOneResult, error)
+	UpdateTodo(id string, todo *models.Todo) error
 	DeleteTodo(id string, c *fiber.Ctx) error
 }
 
 type TodoUseCase interface {
 	GetAll() (*[]Todo, error)
-	CreateTodo(todo *Todo, c *fiber.Ctx) (*mongo.InsertOneResult, error)
-	UpdateTodo(id string, todo *models.Todo, c *fiber.Ctx) error
+	CreateTodo(todo *Todo) (*mongo.InsertOneResult, error)
+	UpdateTodo(id string, todo *models.Todo) error
 	DeleteTodo(id string, c *fiber.Ctx) error
 }
