@@ -4,18 +4,20 @@ import (
 	"os"
 
 	"github.com/golang-jwt/jwt/v5"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GenerateToken(id int) (string, error) {
+func GenerateToken(id primitive.ObjectID) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": id,
 	})
 
-	tokeny, err := token.SignedString(os.Getenv("JWT_SECRET"))
+	secret := []byte(os.Getenv("JWT_SECRET"))
+	tokenString, err := token.SignedString(secret)
 	if err != nil {
 		return "", err
 	}
-	return tokeny, nil
+	return tokenString, nil
 }
 
 func VerifyToken(tokenString string) (bool, error) {

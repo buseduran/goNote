@@ -20,4 +20,16 @@ func (userController *UserController) SignUp(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 	return c.Status(fiber.StatusOK).JSON(result)
-} 
+}
+func (userController *UserController) SignIn(c *fiber.Ctx) error {
+	user := new(domain.UserSignin)
+	if err := c.BodyParser(user); err != nil {
+		return err
+	}
+
+	result, err := userController.UserUseCase.SignIn(user)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusOK).JSON(result)
+}

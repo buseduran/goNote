@@ -50,8 +50,10 @@ func (user *User) ResponseMap() map[string]interface{} {
 
 type UserRepository interface {
 	SignUp(user *UserSignup) (*mongo.InsertOneResult, error)
+	SignIn(user *UserSignin) (string, error)
 }
 
 type UserUseCase interface {
 	SignUp(user *UserSignup) (*mongo.InsertOneResult, error)
+	SignIn(user *UserSignin) (string, error)
 }
