@@ -3,17 +3,16 @@ package repository
 import (
 	"context"
 
-	"github.com/buwud/goNote/db"
 	"github.com/buwud/goNote/domain"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type userRepository struct {
-	db db.Collection
+	collection *mongo.Collection
 }
 
-func NewUserRepository(database db.Collection) *userRepository {
-	return &userRepository{db: database}
+func NewUserRepository(database *mongo.Collection) *userRepository {
+	return &userRepository{collection: database}
 }
 
 func (u *userRepository) SignUp(user *domain.UserSignup) (*mongo.InsertOneResult, error) {
@@ -22,7 +21,7 @@ func (u *userRepository) SignUp(user *domain.UserSignup) (*mongo.InsertOneResult
 	newUser.Password = user.Password
 	newUser.FirstName = user.FirstName
 	newUser.LastName = user.LastName
-	result, err := u.db.TodoCollection.InsertOne(context.Background(), &newUser)
+	result, err := u.collection.InsertOne(context.Background(), &newUser)
 
 	if err != nil {
 		return nil, err

@@ -9,7 +9,7 @@ import (
 )
 
 func NewUserRouter(publicRouter fiber.Router) {
-	userRepo := repository.NewUserRepository(db.GetUserCollection())
+	userRepo := repository.NewUserRepository(db.GetCollections().UserCollection)
 	userUseCase, err := usecase.NewUserUseCase(userRepo)
 	if err != nil {
 		publicRouter.Use(func(c *fiber.Ctx) error {

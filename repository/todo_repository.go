@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/buwud/goNote/db"
 	"github.com/buwud/goNote/domain"
 	"github.com/buwud/goNote/domain/models"
 	"github.com/gofiber/fiber/v2"
@@ -14,16 +13,16 @@ import (
 )
 
 type todoRepository struct {
-	db db.Collection
+	collection *mongo.Collection
 }
 
-func NewTodoRepository(database db.Collection) *todoRepository {
-	return &todoRepository{db: database}
+func NewTodoRepository(collection *mongo.Collection) *todoRepository {
+	return &todoRepository{collection: collection}
 }
 
 func (t *todoRepository) GetAll() (*[]domain.Todo, error) {
 	var todos []domain.Todo
-	cursor, err := t.db.TodoCollection.Find(context.Background(), bson.M{})
+	cursor, err := t.collection.Find(context.Background(), bson.M{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,7 +36,7 @@ func (t *todoRepository) GetAll() (*[]domain.Todo, error) {
 }
 
 func (t *todoRepository) CreateTodo(todo *domain.Todo) (*mongo.InsertOneResult, error) {
-	return t.db.TodoCollection.InsertOne(context.Background(), todo)
+	return t.collection.InsertOne(context.Background(), todo)
 }
 
 func (t *todoRepository) UpdateTodo(id string, todo *models.Todo) error {
@@ -50,7 +49,7 @@ func (t *todoRepository) UpdateTodo(id string, todo *models.Todo) error {
 		"completed": todo.Completed,
 		"body":      todo.Body,
 	}}
-	_, err = t.db.TodoCollection.UpdateOne(context.Background(), filter, update)
+	_, err = t.collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		return err
 	}
@@ -62,7 +61,7 @@ func (t *todoRepository) DeleteTodo(id string, c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "invalid todo ID"})
 	}
 	filter := bson.M{"_id": objectID}
-	_, err = t.db.TodoCollection.DeleteOne(context.Background(), filter)
+	_, err = t.collection.DeleteOne(context.Background(), filter)
 
 	if err != nil {
 		return err
