@@ -3,6 +3,7 @@ package domain
 import (
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -50,10 +51,12 @@ func (user *User) ResponseMap() map[string]interface{} {
 
 type UserRepository interface {
 	SignUp(user *UserSignup) (*mongo.InsertOneResult, error)
-	SignIn(user *UserSignin) (string, error)
+	SignIn(user *UserSignin, c *fiber.Ctx) error
+	SignOut(c *fiber.Ctx)
 }
 
 type UserUseCase interface {
 	SignUp(user *UserSignup) (*mongo.InsertOneResult, error)
-	SignIn(user *UserSignin) (string, error)
+	SignIn(user *UserSignin, c *fiber.Ctx) error
+	SignOut(c *fiber.Ctx)
 }

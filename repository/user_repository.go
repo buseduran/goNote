@@ -7,6 +7,7 @@ import (
 
 	"github.com/buwud/goNote/api/utils"
 	"github.com/buwud/goNote/domain"
+	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -30,30 +31,55 @@ func (u *userRepository) SignUp(user *domain.UserSignup) (*mongo.InsertOneResult
 		UpdatedAt: time.Now(),
 	}
 
-	result, err := u.collection.InsertOne(context.Background(), &newUser)
+	//check username exist
+	existingUser := domain.User{}
+	filter := bson.M{"username": user.Username}
+	err := u.collection.FindOne(context.Background(), filter).Decode(&existingUser)
 
+	if err == nil {
+		return nil, errors.New("username is taken")
+	}
+
+	//insert into db
+	result, err := u.collection.InsertOne(context.Background(), &newUser)
 	if err != nil {
 		return nil, err
 	}
+
 	return result, nil
 }
-func (u *userRepository) SignIn(user *domain.UserSignin) (string, error) {
+func (u *userRepository) SignIn(user *domain.UserSignin, c *fiber.Ctx) error {
 	signedUser := domain.User{}
+
+	//check if user exist
 	filter := bson.M{"username": user.Username}
 	err := u.collection.FindOne(context.Background(), filter).Decode(&signedUser)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return "", err
+			return err
 		}
-		return "", err
+		return err
 	}
-	var token string
+
+	//compare passwords and generate jwt token
 	if utils.ComparePassword(signedUser.Password, user.Password) {
-		token, err = utils.GenerateToken(signedUser.ID)
+		err = utils.GenerateToken(signedUser.ID, c)
 		if err != nil {
-			return "", err
+			return err
 		}
-		return token, nil
+		return nil
 	}
-	return token, errors.New("incorrect password")
+
+	return errors.New("incorrect password")
+}
+
+func (u *userRepository) SignOut(c *fiber.Ctx) {
+	cookie := fiber.Cookie{
+		Name:    "jwt",
+		Value:   "",
+		Expires: time.Now().Add(-time.Hour),
+		//HTTPOnly: true,
+		Secure: true,
+	}
+	c.Cookie(&cookie)
 }

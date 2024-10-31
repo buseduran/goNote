@@ -22,8 +22,8 @@ func NewTodoRouter(publicRouter fiber.Router) {
 		TodoUseCase: todoUseCase,
 	}
 
-	publicRouter.Get("/todos", todoController.GetAll)
-	publicRouter.Post("/todos", middleware.JWTAuthMiddleware(), todoController.CreateTodo)
-	publicRouter.Patch("/todos/:id", middleware.JWTAuthMiddleware(), todoController.UpdateTodo)
-	publicRouter.Delete("/todos/:id", middleware.JWTAuthMiddleware(), todoController.DeleteTodo)
+	publicRouter.Get("/todos", middleware.JWTProtected, todoController.GetAll)
+	publicRouter.Post("/todos", middleware.JWTProtected, todoController.CreateTodo)
+	publicRouter.Patch("/todos/:id", middleware.JWTProtected, todoController.UpdateTodo)
+	publicRouter.Delete("/todos/:id", middleware.JWTProtected, todoController.DeleteTodo)
 }

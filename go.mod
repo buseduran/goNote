@@ -10,11 +10,10 @@ require (
 	golang.org/x/crypto v0.26.0
 )
 
-require github.com/golang-jwt/jwt/v4 v4.0.0 // indirect
+require github.com/golang-jwt/jwt/v4 v4.0.0
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
-	github.com/gofiber/jwt/v2 v2.2.7
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect

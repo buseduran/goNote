@@ -2,22 +2,40 @@ package utils
 
 import (
 	"os"
+	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GenerateToken(id primitive.ObjectID) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id": id,
-	})
+func GenerateToken(id primitive.ObjectID, c *fiber.Ctx) error {
 
+	//generate jwt token
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": id.Hex(),
+		"exp":     time.Now().Add(time.Hour * 1).Unix(),
+	})
 	secret := []byte(os.Getenv("JWT_SECRET"))
-	tokenString, err := token.SignedString(secret)
+	token, err := claims.SignedString(secret)
 	if err != nil {
-		return "", err
+		return err
 	}
-	return tokenString, nil
+
+	//set jwt token in cookie
+	cookie := fiber.Cookie{
+		Name:    "jwt",
+		Value:   token,
+		Expires: time.Now().Add(time.Hour * 1),
+		//HTTPOnly: true,
+		Secure: true,
+	}
+	c.Cookie(&cookie)
+
+	// Authentication successful, return success response
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		"message": "Login successful",
+	})
 }
 
 func VerifyToken(tokenString string) (bool, error) {

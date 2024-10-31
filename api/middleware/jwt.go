@@ -1,34 +1,59 @@
 package middleware
 
 import (
-	"log"
 	"os"
 
+	"github.com/buwud/goNote/domain"
 	"github.com/gofiber/fiber/v2"
-	jwtware "github.com/gofiber/jwt/v2"
+	"github.com/golang-jwt/jwt/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func JWTAuthMiddleware() fiber.Handler {
-	// Retrieve the JWT_SECRET from environment variables.
-	secret := os.Getenv("JWT_SECRET")
-	if secret == "" {
-		log.Fatal("JWT_SECRET environment variable is required but not set.")
+func JWTProtected(c *fiber.Ctx) error {
+	cookie := c.Cookies("jwt")
+
+	// Parse JWT token with claims
+	token, err := jwt.ParseWithClaims(cookie, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	})
+
+	// Handle token parsing errors
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Unauthorized",
+		})
 	}
 
-	return jwtware.New(jwtware.Config{
-		SigningKey:   []byte(secret),
-		ContextKey:   "jwt", // Custom context key for JWT data
-		ErrorHandler: jwtErrorHandler,
-	})
-}
+	// Extract claims from token
+	claims, ok := token.Claims.(*jwt.MapClaims)
+	if !ok || !token.Valid {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to parse claims",
+		})
+	}
 
-func jwtErrorHandler(c *fiber.Ctx, err error) error {
-	// Log the error for internal tracking.
-	log.Println("JWT Error:", err)
+	// Extract user ID from claims
+	id, ok := (*claims)["user_id"].(string)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Unauthorized",
+		})
+	}
 
-	// Return status 401 and a generic error message.
-	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-		"error": "Unauthorized",
-		"msg":   "Missing or malformed JWT",
-	})
+	// Convert the user ID to an ObjectID
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Invalid user ID",
+		})
+	}
+
+	// Assuming domain.User contains an ID field of type primitive.ObjectID
+	user := domain.User{ID: objectID}
+
+	// Set the user in the context for access in later handlers
+	c.Locals("user", user)
+
+	// Proceed to the next handler
+	return c.Next()
 }
