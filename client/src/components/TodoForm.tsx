@@ -54,6 +54,7 @@ const TodoForm = () =>
                     value={ newTodo }
                     onChange={ (e) => setNewTodo(e.target.value) }
                     ref={ (input) => input && input.focus() }
+                    placeholder="write todo"
                 />
                 <Button
                     mx={ 2 }

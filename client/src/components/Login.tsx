@@ -13,8 +13,11 @@ import
     InputLeftElement,
     InputRightElement,
     Link,
-    Stack
+    Spinner,
+    Stack,
+    Text
 } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 
@@ -27,6 +30,48 @@ const Login = () =>
     const [showPassword, setShowPassword] = useState(false);
 
     const handleShowClick = () => setShowPassword(!showPassword);
+
+    const [newTodo, setNewTodo] = useState("");
+
+    const queryClient = useQueryClient();
+
+    const { mutate: createTodo, isPending: isCreating } = useMutation({
+        mutationKey: ["createTodo"],
+        mutationFn: async (e: React.FormEvent) =>
+        {
+            e.preventDefault()
+            try
+            {
+                const response = await fetch("http://localhost:5000/api/todos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ body: newTodo })
+                })
+                const data = await response.json()
+                console.log(data)
+                if (!response.ok)
+                {
+                    throw new Error(data.message)
+                }
+                setNewTodo("")
+                return data
+            }
+            catch (error: any)
+            {
+                throw new Error(error.message)
+            }
+        },
+        onSuccess: () =>
+        {
+            queryClient.invalidateQueries({ queryKey: ["todos"] })
+        },
+        onError: (error: any) =>
+        {
+            alert(error.message)
+        }
+    })
 
     return (
         <Flex
@@ -46,7 +91,7 @@ const Login = () =>
                 <Avatar bg="teal.500" />
                 <Heading color="teal.400">Welcome</Heading>
                 <Box minW={ { base: "90%", md: "468px" } }>
-                    <form>
+                    <form onSubmit={ (e) => { e.preventDefault; loginUser(e); } }>
                         <Stack
                             spacing={ 4 }
                             p="1rem"
@@ -59,7 +104,7 @@ const Login = () =>
                                         pointerEvents="none"
                                         children={ <CFaUserAlt color="gray.300" /> }
                                     />
-                                    <Input type="email" placeholder="email address" />
+                                    <Input type="username" placeholder="username" />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
@@ -71,7 +116,7 @@ const Login = () =>
                                     />
                                     <Input
                                         type={ showPassword ? "text" : "password" }
-                                        placeholder="Password"
+                                        placeholder="password"
                                     />
                                     <InputRightElement width="4.5rem">
                                         <Button h="1.75rem" size="sm" onClick={ handleShowClick }>
@@ -90,7 +135,7 @@ const Login = () =>
                                 colorScheme="teal"
                                 width="full"
                             >
-                                Login
+                                { isCreating ? <Spinner size={ "xs" } /> : <Text>Login</Text> }
                             </Button>
                         </Stack>
                     </form>
@@ -102,7 +147,7 @@ const Login = () =>
                     Sign Up
                 </Link>
             </Box>
-        </Flex>
+        </Flex >
     );
 }
 
