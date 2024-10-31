@@ -21,6 +21,6 @@ func NewUserRouter(publicRouter fiber.Router) {
 		UserUseCase: userUseCase,
 	}
 
-	publicRouter.Post("/user", userController.SignUp)
-	publicRouter.Post("/user", userController.SignIn)
+	publicRouter.Post("/login", userController.SignUp)
+	publicRouter.Post("/register", userController.SignIn)
 }

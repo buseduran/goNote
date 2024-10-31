@@ -2,6 +2,7 @@ package route
 
 import (
 	"github.com/buwud/goNote/api/controller"
+	"github.com/buwud/goNote/api/middleware"
 	"github.com/buwud/goNote/db"
 	"github.com/buwud/goNote/repository"
 	"github.com/buwud/goNote/usecase"
@@ -22,7 +23,7 @@ func NewTodoRouter(publicRouter fiber.Router) {
 	}
 
 	publicRouter.Get("/todos", todoController.GetAll)
-	publicRouter.Post("/todos", todoController.CreateTodo)
-	publicRouter.Patch("/todos/:id", todoController.UpdateTodo)
-	publicRouter.Delete("/todos/:id", todoController.DeleteTodo)
+	publicRouter.Post("/todos", middleware.JWTAuthMiddleware(), todoController.CreateTodo)
+	publicRouter.Patch("/todos/:id", middleware.JWTAuthMiddleware(), todoController.UpdateTodo)
+	publicRouter.Delete("/todos/:id", middleware.JWTAuthMiddleware(), todoController.DeleteTodo)
 }
