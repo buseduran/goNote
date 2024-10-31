@@ -1,26 +1,33 @@
-import { Box, Stack, Text, Container } from "@chakra-ui/react"
+import { Box, Stack, Text, Container, Divider } from "@chakra-ui/react";
 
 const Footer = () =>
 {
     return (
-
-        <Container maxW={ "900px" } >
+        <Container width="100%" maxW="100%">
             <Box
-                color={ "white" }
-                marginTop={ 6 }
+                color="white"
                 px={ 4 }
             >
                 <Stack direction={ { base: 'column', md: 'row' } }
-                    justifyContent={ "space-between" }
+                    justifyContent="space-between"
                     spacing={ 5 } py={ 4 }
                 >
-                    <Text fontSize={ "2xs" } color={ "gray.600" } justifyItems={ "center" } >
+                    <Text fontSize="2xs" color="gray.600" textAlign="center">
                         © { new Date().getFullYear() } by buwu
+                    </Text>
+                </Stack>
+                <Divider borderColor="gray.600" />
+                <Stack direction={ { base: 'column', md: 'row' } }
+                    justifyContent="space-between"
+                    spacing={ 5 } py={ 4 }
+                >
+                    <Text fontSize="2xs" color="gray.600" textAlign="center">
+                        ♥
                     </Text>
                 </Stack>
             </Box>
         </Container>
-    )
-}
+    );
+};
 
-export default Footer
+export default Footer;

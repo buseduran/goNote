@@ -7,8 +7,8 @@ export default function Navbar()
 {
     const { colorMode, toggleColorMode } = useColorMode();
     return (
-        <Container maxW={ "" }>
-            <Box bg={ useColorModeValue("purple.100", "purple.800") }
+        <Container maxW={ "" } backgroundColor={ "#841e7452" } >
+            <Box bg={ useColorModeValue("#900c3f6b", "#841e7452") }
                 px={ 4 }
                 borderRadius={ "5" }
             >
