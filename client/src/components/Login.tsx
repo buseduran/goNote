@@ -58,8 +58,6 @@ const Login = () =>
                 {
                     throw new Error(data.message)
                 }
-                setUsername("")
-                setPassword("")
                 return data
             }
             catch (error: any)
@@ -67,8 +65,10 @@ const Login = () =>
                 throw new Error(error.message)
             }
         },
-        onSuccess: () =>
+        onSuccess: (data) =>
         {
+            //store token
+            localStorage.setItem("token", data.token);
             queryClient.invalidateQueries({ queryKey: ["user"] })
             navigate("/")
         },
