@@ -20,6 +20,7 @@ import
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -27,27 +28,29 @@ const CFaLock = chakra(FaLock);
 
 const Login = () =>
 {
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false)
 
-    const handleShowClick = () => setShowPassword(!showPassword);
+    const handleShowClick = () => setShowPassword(!showPassword)
 
-    const [newTodo, setNewTodo] = useState("");
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
 
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
+    const navigate = useNavigate()
 
-    const { mutate: createTodo, isPending: isCreating } = useMutation({
-        mutationKey: ["createTodo"],
+    const { mutate: login, isPending: isCreating } = useMutation({
+        mutationKey: ["loginUser"],
         mutationFn: async (e: React.FormEvent) =>
         {
             e.preventDefault()
             try
             {
-                const response = await fetch("http://localhost:5000/api/todos", {
+                const response = await fetch("http://localhost:5000/api/login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ body: newTodo })
+                    body: JSON.stringify({ username, password })
                 })
                 const data = await response.json()
                 console.log(data)
@@ -55,7 +58,8 @@ const Login = () =>
                 {
                     throw new Error(data.message)
                 }
-                setNewTodo("")
+                setUsername("")
+                setPassword("")
                 return data
             }
             catch (error: any)
@@ -65,7 +69,8 @@ const Login = () =>
         },
         onSuccess: () =>
         {
-            queryClient.invalidateQueries({ queryKey: ["todos"] })
+            queryClient.invalidateQueries({ queryKey: ["user"] })
+            navigate("/")
         },
         onError: (error: any) =>
         {
@@ -91,7 +96,7 @@ const Login = () =>
                 <Avatar bg="teal.500" />
                 <Heading color="teal.400">Welcome</Heading>
                 <Box minW={ { base: "90%", md: "468px" } }>
-                    <form onSubmit={ (e) => { e.preventDefault; loginUser(e); } }>
+                    <form onSubmit={ (e) => { e.preventDefault; login(e); } }>
                         <Stack
                             spacing={ 4 }
                             p="1rem"
@@ -104,7 +109,11 @@ const Login = () =>
                                         pointerEvents="none"
                                         children={ <CFaUserAlt color="gray.300" /> }
                                     />
-                                    <Input type="username" placeholder="username" />
+                                    <Input
+                                        type="text"
+                                        value={ username }
+                                        placeholder="username"
+                                        onChange={ (e) => setUsername(e.target.value) } />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
@@ -117,6 +126,8 @@ const Login = () =>
                                     <Input
                                         type={ showPassword ? "text" : "password" }
                                         placeholder="password"
+                                        value={ password }
+                                        onChange={ (e) => setPassword(e.target.value) }
                                     />
                                     <InputRightElement width="4.5rem">
                                         <Button h="1.75rem" size="sm" onClick={ handleShowClick }>
@@ -134,6 +145,7 @@ const Login = () =>
                                 variant="solid"
                                 colorScheme="teal"
                                 width="full"
+                                isDisabled={ isCreating }
                             >
                                 { isCreating ? <Spinner size={ "xs" } /> : <Text>Login</Text> }
                             </Button>
