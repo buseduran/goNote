@@ -1,5 +1,4 @@
-import
-{
+import {
     Avatar,
     Box,
     Button,
@@ -26,8 +25,7 @@ const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
 
-const Login = () =>
-{
+const Login = () => {
     const [showPassword, setShowPassword] = useState(false)
 
     const handleShowClick = () => setShowPassword(!showPassword)
@@ -40,11 +38,9 @@ const Login = () =>
 
     const { mutate: login, isPending: isCreating } = useMutation({
         mutationKey: ["loginUser"],
-        mutationFn: async (e: React.FormEvent) =>
-        {
+        mutationFn: async (e: React.FormEvent) => {
             e.preventDefault()
-            try
-            {
+            try {
                 const response = await fetch("http://localhost:5000/api/login", {
                     method: "POST",
                     headers: {
@@ -54,26 +50,23 @@ const Login = () =>
                 })
                 const data = await response.json()
                 console.log(data)
-                if (!response.ok)
-                {
+                if (!response.ok) {
                     throw new Error(data.message)
                 }
                 return data
             }
-            catch (error: any)
-            {
+            catch (error: any) {
                 throw new Error(error.message)
             }
         },
-        onSuccess: (data) =>
-        {
+        onSuccess: (data) => {
             //store token
-            localStorage.setItem("token", data.token);
+            console.log(data.token)
+            localStorage.setItem("jwt", data.token);
             queryClient.invalidateQueries({ queryKey: ["user"] })
             navigate("/")
         },
-        onError: (error: any) =>
-        {
+        onError: (error: any) => {
             alert(error.message)
         }
     })
@@ -95,10 +88,10 @@ const Login = () =>
             >
                 <Avatar bg="teal.500" />
                 <Heading color="teal.400">Welcome</Heading>
-                <Box minW={ { base: "90%", md: "468px" } }>
-                    <form onSubmit={ (e) => { e.preventDefault; login(e); } }>
+                <Box minW={{ base: "90%", md: "468px" }}>
+                    <form onSubmit={(e) => { e.preventDefault; login(e); }}>
                         <Stack
-                            spacing={ 4 }
+                            spacing={4}
                             p="1rem"
                             backgroundColor="whiteAlpha.100"
                             boxShadow="md"
@@ -107,13 +100,13 @@ const Login = () =>
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
-                                        children={ <CFaUserAlt color="gray.300" /> }
+                                        children={<CFaUserAlt color="gray.300" />}
                                     />
                                     <Input
                                         type="text"
-                                        value={ username }
+                                        value={username}
                                         placeholder="username"
-                                        onChange={ (e) => setUsername(e.target.value) } />
+                                        onChange={(e) => setUsername(e.target.value)} />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
@@ -121,17 +114,17 @@ const Login = () =>
                                     <InputLeftElement
                                         pointerEvents="none"
                                         color="gray.300"
-                                        children={ <CFaLock color="gray.300" /> }
+                                        children={<CFaLock color="gray.300" />}
                                     />
                                     <Input
-                                        type={ showPassword ? "text" : "password" }
+                                        type={showPassword ? "text" : "password"}
                                         placeholder="password"
-                                        value={ password }
-                                        onChange={ (e) => setPassword(e.target.value) }
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
                                     <InputRightElement width="4.5rem">
-                                        <Button h="1.75rem" size="sm" onClick={ handleShowClick }>
-                                            { showPassword ? "Hide" : "Show" }
+                                        <Button h="1.75rem" size="sm" onClick={handleShowClick}>
+                                            {showPassword ? "Hide" : "Show"}
                                         </Button>
                                     </InputRightElement>
                                 </InputGroup>
@@ -140,21 +133,21 @@ const Login = () =>
                                 </FormHelperText>
                             </FormControl>
                             <Button
-                                borderRadius={ 2 }
+                                borderRadius={2}
                                 type="submit"
                                 variant="solid"
                                 colorScheme="teal"
                                 width="full"
-                                isDisabled={ isCreating }
+                                isDisabled={isCreating}
                             >
-                                { isCreating ? <Spinner size={ "xs" } /> : <Text>Login</Text> }
+                                {isCreating ? <Spinner size={"xs"} /> : <Text>Login</Text>}
                             </Button>
                         </Stack>
                     </form>
                 </Box>
             </Stack>
             <Box>
-                New to us?{ " " }
+                New to us?{" "}
                 <Link color="teal.500" href="#">
                     Sign Up
                 </Link>

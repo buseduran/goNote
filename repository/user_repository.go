@@ -48,7 +48,7 @@ func (u *userRepository) SignUp(user *domain.UserSignup) (*mongo.InsertOneResult
 
 	return result, nil
 }
-func (u *userRepository) SignIn(user *domain.UserSignin, c *fiber.Ctx) error {
+func (u *userRepository) SignIn(user *domain.UserSignin, c *fiber.Ctx) (string, error) {
 	signedUser := domain.User{}
 
 	//check if user exist
@@ -56,21 +56,21 @@ func (u *userRepository) SignIn(user *domain.UserSignin, c *fiber.Ctx) error {
 	err := u.collection.FindOne(context.Background(), filter).Decode(&signedUser)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return err
+			return "", err
 		}
-		return err
+		return "", err
 	}
 
 	//compare passwords and generate jwt token
+	var token string
 	if utils.ComparePassword(signedUser.Password, user.Password) {
-		err = utils.GenerateToken(signedUser.ID, c)
+		token, err = utils.GenerateToken(signedUser.ID, c)
 		if err != nil {
-			return err
+			return "", err
 		}
-		return nil
+		return token, nil
 	}
-
-	return errors.New("incorrect password")
+	return token, err
 }
 
 func (u *userRepository) SignOut(c *fiber.Ctx) {

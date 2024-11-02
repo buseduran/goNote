@@ -18,7 +18,7 @@ func (u *userUseCase) SignUp(user *domain.UserSignup) (*mongo.InsertOneResult, e
 	return u.userRepo.SignUp(user)
 }
 
-func (u *userUseCase) SignIn(user *domain.UserSignin, c *fiber.Ctx) error {
+func (u *userUseCase) SignIn(user *domain.UserSignin, c *fiber.Ctx) (string, error) {
 	return u.userRepo.SignIn(user, c)
 }
 

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"os"
+	"strings"
 
 	"github.com/buwud/goNote/domain"
 	"github.com/gofiber/fiber/v2"
@@ -10,10 +11,14 @@ import (
 )
 
 func JWTProtected(c *fiber.Ctx) error {
-	cookie := c.Cookies("jwt")
+	authHeader := c.Get("Authorization")
+	if authHeader == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "No token provided"})
+	}
+	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
 	// Parse JWT token with claims
-	token, err := jwt.ParseWithClaims(cookie, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
 

@@ -27,11 +27,15 @@ func (userController *UserController) SignIn(c *fiber.Ctx) error {
 		return err
 	}
 
-	err := userController.UserUseCase.SignIn(user, c)
+	token, err := userController.UserUseCase.SignIn(user, c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
-	return c.Status(fiber.StatusOK).JSON("logged in")
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "logged in",
+		"token":   token,
+	})
 }
 
 func (userController *UserController) SignOut(c *fiber.Ctx) error {

@@ -8,63 +8,63 @@ export type Todo = {
     completed: boolean
 }
 
-const TodoList = () =>
-{
+const TodoList = () => {
     //fetch datas
     const { data: todos, isLoading, error } = useQuery<Todo[]>({
         queryKey: ["todos"],
-        queryFn: async () =>
-        {
-            try
-            {
-                const response = await fetch("http://localhost:5000/api/todos")
+        queryFn: async () => {
+            try {
+                const response = await fetch("http://localhost:5000/api/todos", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`,
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include"
+                })
                 const data = await response.json()
-                if (!response.ok)
-                {
+                if (!response.ok) {
                     throw new Error(data.message || "Something went wrong")
                 }
                 return data || []
             }
-            catch (error)
-            {
+            catch (error) {
                 console.log(error)
             }
         }
     })
 
-    if (isLoading)
-    {
+    if (isLoading) {
         return <Text>Loading...</Text>
     }
-    if (error)
-    {
-        return <Text>Error: { error.message }</Text>
+    if (error) {
+        return <Text>Error: {error.message}</Text>
     }
 
     return (
         <>
-            <Text textTransform={ "uppercase" }
-                fontSize={ "xl" }
-                fontWeight={ "semibold" }
-                textAlign={ "center" }
-                my={ 2 }
+            <Text textTransform={"uppercase"}
+                fontSize={"xl"}
+                fontWeight={"semibold"}
+                textAlign={"center"}
+                my={2}
                 bgGradient='linear(to-l, purple.600, #00ffff)'
-                bgClip={ "text" }>
+                bgClip={"text"}>
                 Tasks
             </Text >
-            { !isLoading && todos?.length === 0 && (
+            {!isLoading && todos?.length === 0 && (
                 <Stack>
                     <Text>
                         No tasks for today
                     </Text>
-                    <img src="/gopher.jpg" width={ 100 } height={ 100 }></img>
+                    <img src="/gopher.jpg" width={100} height={100}></img>
                 </Stack>
             )
             }
-            <Stack gap={ 3 }>
-                { todos?.map((todo) => (
-                    <TodoItem key={ todo._id } todo={ todo } />
-                )) }
+            <Stack gap={3}>
+                {todos?.map((todo) => (
+                    <TodoItem key={todo._id} todo={todo} />
+                ))}
             </Stack>
         </>
     )

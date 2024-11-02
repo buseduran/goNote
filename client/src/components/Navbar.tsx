@@ -3,53 +3,53 @@ import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
 import gopher from "../../public/gopher.jpg";
 
-export default function Navbar()
-{
+export default function Navbar() {
     const { colorMode, toggleColorMode } = useColorMode();
     return (
-        <Container maxW={ "" } backgroundColor={ "#841e7452" } >
-            <Box bg={ useColorModeValue("#900c3f6b", "#841e7452") }
-                px={ 4 }
-                borderRadius={ "5" }
+        <Container backgroundColor={"#841e7452"} >
+            <Box bg={useColorModeValue("#900c3f6b", "#841e7452")}
+                px={4}
+                borderRadius={"5"}
+                maxW={"100%"}
             >
-                <Flex h={ 20 } alignItems={ "right" } justifyContent={ "space-between" } >
-                    {/* LEFT */ }
+                <Flex h={20} alignItems={"right"} justifyContent={"space-between"} >
+                    {/* LEFT */}
                     <Flex>
-                        <img src={ gopher } alt="logo" height={ 5 } width={ 100 }></img>
+                        {/* <img src={ gopher } alt="logo" height={ 5 } width={ 100 }></img> */}
                     </Flex>
-                    {/* RIGHT */ }
-                    <Flex alignItems={ "center" } gap={ 5 }>
-                        <Text fontSize="lg" fontWeight={ 500 }>
+                    {/* RIGHT */}
+                    <Flex alignItems={"center"} gap={5}>
+                        <Text fontSize="lg" fontWeight={500}>
                             go-n-note
                         </Text>
-                        <Button onClick={ toggleColorMode }>
-                            { colorMode === "light" ? <IoMoon /> : <LuSun size={ 20 } /> }
+                        <Button onClick={toggleColorMode}>
+                            {colorMode === "light" ? <IoMoon /> : <LuSun size={20} />}
                         </Button>
                     </Flex>
                 </Flex>
             </Box>
             <Box
-                px={ 4 } alignItems={ "center" } py={ 2 }
+                px={4} alignItems={"center"} py={2}
             >
-                <Tabs variant={ "line" } align="center" colorScheme="blue">
+                <Tabs variant={"line"} align="center" colorScheme="blue">
                     <TabList>
                         <Tab>
-                            <Link href="#" _hover={ { color: 'white' } }>
-                                <Text fontWeight={ "thin" } fontSize={ "14" } color={ "gray.300" }>
+                            <Link href="#" _hover={{ color: 'white' }}>
+                                <Text fontWeight={"thin"} fontSize={"14"} color={"gray.300"}>
                                     Daily
                                 </Text>
                             </Link>
                         </Tab>
                         <Tab>
-                            <Link href="#" _hover={ { color: 'white' } }>
-                                <Text fontWeight={ "thin" } fontSize={ "14" } color={ "gray.300" }>
+                            <Link href="#" _hover={{ color: 'white' }}>
+                                <Text fontWeight={"thin"} fontSize={"14"} color={"gray.300"}>
                                     Weekly
                                 </Text>
                             </Link>
                         </Tab>
                         <Tab>
-                            <Link href="#" _hover={ { color: 'white' } }>
-                                <Text fontWeight={ "thin" } fontSize={ "14" } color={ "gray.300" }>
+                            <Link href="#" _hover={{ color: 'white' }}>
+                                <Text fontWeight={"thin"} fontSize={"14"} color={"gray.300"}>
                                     Monthly
                                 </Text>
                             </Link>
