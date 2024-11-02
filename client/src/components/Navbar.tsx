@@ -1,21 +1,19 @@
 import { Box, Container, useColorModeValue, useColorMode, Flex, Text, Button, Link, Tabs, TabList, Tab } from "@chakra-ui/react";
 import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
-import gopher from "../../public/gopher.jpg";
 
 export default function Navbar() {
     const { colorMode, toggleColorMode } = useColorMode();
     return (
-        <Container backgroundColor={"#841e7452"} >
-            <Box bg={useColorModeValue("#900c3f6b", "#841e7452")}
+        <Container >
+            <Box bgGradient='linear(to-l,teal.800, purple.800)'
                 px={4}
                 borderRadius={"5"}
-                maxW={"100%"}
             >
                 <Flex h={20} alignItems={"right"} justifyContent={"space-between"} >
                     {/* LEFT */}
                     <Flex>
-                        {/* <img src={ gopher } alt="logo" height={ 5 } width={ 100 }></img> */}
+                        {/* <img src={gopher} alt="logo" height={5} width={100}></img> */}
                     </Flex>
                     {/* RIGHT */}
                     <Flex alignItems={"center"} gap={5}>

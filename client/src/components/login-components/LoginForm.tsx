@@ -86,14 +86,19 @@ const Login = () => {
                 justifyContent="center"
                 alignItems="center"
             >
-                <Avatar bg="teal.500" />
-                <Heading color="teal.400">Welcome</Heading>
+                <Avatar bg="#841e7452" />
+                <Heading
+                    bgGradient='linear(to-l, purple.500, #00ffff)'
+                    bgClip={"text"}
+                    mt={2}
+                    fontWeight={"semibold"}
+                    fontSize={"2xl"}
+                >Welcome</Heading>
                 <Box minW={{ base: "90%", md: "468px" }}>
                     <form onSubmit={(e) => { e.preventDefault; login(e); }}>
                         <Stack
                             spacing={4}
                             p="1rem"
-                            backgroundColor="whiteAlpha.100"
                             boxShadow="md"
                         >
                             <FormControl>
@@ -136,7 +141,7 @@ const Login = () => {
                                 borderRadius={2}
                                 type="submit"
                                 variant="solid"
-                                colorScheme="teal"
+                                background={"#841e7452"}
                                 width="full"
                                 isDisabled={isCreating}
                             >
@@ -148,7 +153,7 @@ const Login = () => {
             </Stack>
             <Box>
                 New to us?{" "}
-                <Link color="teal.500" href="#">
+                <Link background={"#00ffff"} bgClip="text" href="/signup">
                     Sign Up
                 </Link>
             </Box>

@@ -3,65 +3,60 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 
-const TodoForm = () =>
-{
+const TodoForm = () => {
     const [newTodo, setNewTodo] = useState("");
 
     const queryClient = useQueryClient();
 
     const { mutate: createTodo, isPending: isCreating } = useMutation({
         mutationKey: ["createTodo"],
-        mutationFn: async (e: React.FormEvent) =>
-        {
+        mutationFn: async (e: React.FormEvent) => {
             e.preventDefault()
-            try
-            {
+            try {
                 const response = await fetch("http://localhost:5000/api/todos", {
                     method: "POST",
                     headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`,
                         "Content-Type": "application/json"
                     },
+                    credentials: "include",
                     body: JSON.stringify({ body: newTodo })
                 })
                 const data = await response.json()
                 console.log(data)
-                if (!response.ok)
-                {
+                if (!response.ok) {
                     throw new Error(data.message)
                 }
                 setNewTodo("")
                 return data
             }
-            catch (error: any)
-            {
+            catch (error: any) {
                 throw new Error(error.message)
             }
         },
-        onSuccess: () =>
-        {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["todos"] })
         },
-        onError: (error: any) =>
-        {
+        onError: (error: any) => {
             alert(error.message)
         }
     })
     return (
-        <form onSubmit={ (e) => { e.preventDefault(); createTodo(e); } }>
+        <form onSubmit={(e) => { e.preventDefault(); createTodo(e); }}>
             <Flex >
                 <Input
                     type='text'
-                    value={ newTodo }
-                    onChange={ (e) => setNewTodo(e.target.value) }
-                    ref={ (input) => input && input.focus() }
+                    value={newTodo}
+                    onChange={(e) => setNewTodo(e.target.value)}
+                    ref={(input) => input && input.focus()}
                     placeholder="write todo"
                 />
                 <Button
-                    mx={ 2 }
+                    mx={2}
                     type='submit'
 
                 >
-                    { isCreating ? <Spinner size={ "xs" } /> : <IoMdAdd size={ 30 } /> }
+                    {isCreating ? <Spinner size={"xs"} /> : <IoMdAdd size={30} />}
                 </Button>
             </Flex>
         </form>
