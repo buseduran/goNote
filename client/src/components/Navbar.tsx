@@ -1,9 +1,53 @@
-import { Box, Container, useColorModeValue, useColorMode, Flex, Text, Button, Link, Tabs, TabList, Tab } from "@chakra-ui/react";
+import { Box, Container, useColorMode, Flex, Text, Button, Link, Tabs, TabList, Tab, Spinner } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { BiLogOutCircle } from "react-icons/bi";
 import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
     const { colorMode, toggleColorMode } = useColorMode();
+
+    const [newTodo, setNewTodo] = useState("");
+    const navigate = useNavigate();
+
+    const { mutate: logout, isPending: isLogout } = useMutation({
+        mutationKey: ["createTodo"],
+        mutationFn: async (e: React.FormEvent) => {
+            e.preventDefault()
+            localStorage.removeItem("jwt")
+            try {
+                const response = await fetch("http://localhost:5000/api/logout", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`,
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({ body: newTodo })
+                })
+
+                const data = await response.json()
+                console.log(data)
+                if (!response.ok) {
+                    throw new Error(data.message)
+                }
+                setNewTodo("")
+                return data
+            }
+            catch (error: any) {
+                throw new Error(error.message)
+            }
+        },
+        onSuccess: () => {
+            navigate("/login")
+        },
+        onError: (error: any) => {
+            alert(error.message)
+        }
+    })
+
     return (
         <Container >
             <Box bgGradient='linear(to-l,teal.800, purple.800)'
@@ -22,6 +66,9 @@ export default function Navbar() {
                         </Text>
                         <Button onClick={toggleColorMode}>
                             {colorMode === "light" ? <IoMoon /> : <LuSun size={20} />}
+                        </Button>
+                        <Button onClick={logout}>
+                            {isLogout ? <Spinner size={"xs"} /> : <BiLogOutCircle size={20} />}
                         </Button>
                     </Flex>
                 </Flex>

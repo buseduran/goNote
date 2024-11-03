@@ -81,5 +81,9 @@ func (u *userRepository) SignOut(c *fiber.Ctx) {
 		//HTTPOnly: true,
 		Secure: true,
 	}
+	//delete from local storage
+	//clear the header
+
+	c.Locals("userID", nil)
 	c.Cookie(&cookie)
 }

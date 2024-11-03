@@ -17,7 +17,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
         mutationKey: ["updateTodoBody"],
         mutationFn: async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/todos/${todo._id}`, {
+                const response = await fetch(`http://localhost:5000/api/todos/${todo.id}`, {
                     method: "PATCH",
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("jwt")}`,
@@ -49,7 +49,8 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
         mutationKey: ["updateTodoToggle"],
         mutationFn: async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/todos/${todo._id}`, {
+                console.log("datalarr " + todo)
+                const response = await fetch(`http://localhost:5000/api/todos/${todo.id}`, {
                     method: "PATCH",
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("jwt")}`,
@@ -83,7 +84,7 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
         mutationKey: ["deleteTodo"],
         mutationFn: async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/todos/${todo._id}`, {
+                const response = await fetch(`http://localhost:5000/api/todos/${todo.id}`, {
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("jwt")}`,
                         "Content-Type": "application/json"

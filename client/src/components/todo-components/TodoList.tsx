@@ -3,10 +3,9 @@ import TodoItem from "./TodoItem"
 import { useQuery } from "@tanstack/react-query"
 
 export type Todo = {
-    _id: number
+    id: number
     body: string
     completed: boolean
-    user_id: number
 }
 
 const TodoList = () => {
@@ -64,7 +63,7 @@ const TodoList = () => {
             }
             <Stack gap={3}>
                 {todos?.map((todo) => (
-                    <TodoItem key={todo._id} todo={todo} />
+                    <TodoItem key={todo.id} todo={todo} />
                 ))}
             </Stack>
         </>

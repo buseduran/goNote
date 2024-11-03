@@ -14,7 +14,7 @@ const (
 )
 
 type Todo struct {
-	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Completed bool               `json:"completed"`
 	Body      string             `json:"body"`
 	UserID    primitive.ObjectID `json:"user_id"`
@@ -24,10 +24,11 @@ type Todo struct {
 
 // get todolist response
 type UserTodo struct {
-	Completed bool      `json:"completed"`
-	Body      string    `json:"body"`
-	CreatedAt time.Time `json:"created_at,omitempty" bson:"created_at,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Completed bool               `json:"completed"`
+	Body      string             `json:"body"`
+	CreatedAt time.Time          `json:"created_at,omitempty" bson:"created_at,omitempty"`
+	UpdatedAt time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 }
 
 func (todo *Todo) ResponseMap() map[string]interface{} {

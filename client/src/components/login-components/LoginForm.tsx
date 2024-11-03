@@ -60,8 +60,6 @@ const Login = () => {
             }
         },
         onSuccess: (data) => {
-            //store token
-            console.log(data.token)
             localStorage.setItem("jwt", data.token);
             queryClient.invalidateQueries({ queryKey: ["user"] })
             navigate("/")
