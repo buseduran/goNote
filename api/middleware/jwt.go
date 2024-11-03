@@ -4,7 +4,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/buwud/goNote/domain"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -53,11 +52,8 @@ func JWTProtected(c *fiber.Ctx) error {
 		})
 	}
 
-	// Assuming domain.User contains an ID field of type primitive.ObjectID
-	user := domain.User{ID: objectID}
-
 	// Set the user in the context for access in later handlers
-	c.Locals("user", user)
+	c.Locals("userID", objectID)
 
 	// Proceed to the next handler
 	return c.Next()

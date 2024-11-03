@@ -18,7 +18,7 @@ type User struct {
 	LastName  string             `json:"lastname" bson:"lastname"`
 	UserName  string             `json:"username" bson:"username"`
 	Password  string             `json:"password" bson:"password"`
-	Todos     []Todo             `json:"notes,omitempty" bson:"notes,omitempty"`
+	Todos     []Todo             `json:"todos,omitempty" bson:"todos,omitempty"`
 	IsActive  bool               `json:"is_active" bson:"is_active"`
 	CreatedAt time.Time          `json:"created_at,omitempty" bson:"created_at,omitempty"`
 	UpdatedAt time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty"`

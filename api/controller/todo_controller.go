@@ -20,6 +20,15 @@ func (todoController *TodoController) GetAll(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(todos)
 }
 
+func (todoController *TodoController) GetTodoByUserID(c *fiber.Ctx) error {
+	userID := c.Locals("userID").(primitive.ObjectID)
+	todos, err := todoController.TodoUseCase.GetTodoByUserID(userID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusOK).JSON(todos)
+}
+
 func (todoController *TodoController) CreateTodo(c *fiber.Ctx) error {
 	todo := new(domain.Todo)
 	if err := c.BodyParser(todo); err != nil {
@@ -28,6 +37,9 @@ func (todoController *TodoController) CreateTodo(c *fiber.Ctx) error {
 	if todo.Body == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "todo body cannot be empty"})
 	}
+
+	userID := c.Locals("userID").(primitive.ObjectID)
+	todo.UserID = userID
 
 	result, err := todoController.TodoUseCase.CreateTodo(todo)
 	if err != nil {

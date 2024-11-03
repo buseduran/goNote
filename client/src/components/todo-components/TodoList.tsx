@@ -6,6 +6,7 @@ export type Todo = {
     _id: number
     body: string
     completed: boolean
+    user_id: number
 }
 
 const TodoList = () => {
