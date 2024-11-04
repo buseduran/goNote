@@ -25,8 +25,8 @@ func (u *userRepository) SignUp(user *domain.UserSignup) (*mongo.InsertOneResult
 		UserName:  user.Username,
 		Password:  utils.GeneratePassword(user.Password),
 		IsActive:  true,
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
+		FirstName: user.Firstname,
+		LastName:  user.Lastname,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}

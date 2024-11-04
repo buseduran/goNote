@@ -19,63 +19,62 @@ import
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { FaUserAlt, FaLock } from "react-icons/fa";
+import { BsTextRight } from "react-icons/bs";
+import { FaLock } from "react-icons/fa";
+import { FaUserAstronaut } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
-const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
-
-const Login = () =>
+const Signup = () =>
 {
     const [showPassword, setShowPassword] = useState(false)
 
     const handleShowClick = () => setShowPassword(!showPassword)
 
+    const [firstname, setFirstname] = useState("")
+    const [lastname, setLastname] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
     const queryClient = useQueryClient()
     const navigate = useNavigate()
 
-    const { mutate: login, isPending: isCreating } = useMutation({
-        mutationKey: ["loginUser"],
-        mutationFn: async (e: React.FormEvent) =>
+    const { mutate: signup, isPending: isCreating } = useMutation({
+        mutationKey: ["signupUser"],
+        mutationFn: async () =>
         {
-            e.preventDefault()
             try
             {
-                const response = await fetch("http://localhost:5000/api/login", {
+                const response = await fetch("http://localhost:5000/api/register", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ username, password })
-                })
-                const data = await response.json()
-                console.log(data)
+                    body: JSON.stringify({ firstname: firstname, lastname: lastname, username: username, password: password })
+                });
+                const data = await response.json();
                 if (!response.ok)
                 {
-                    throw new Error(data.message)
+                    throw new Error(data.message);
                 }
-                return data
-            }
-            catch (error: any)
+                return data;
+            } catch (error: any)
             {
-                throw new Error(error.message)
+                throw new Error(error.message);
             }
         },
-        onSuccess: (data) =>
+        onSuccess: () =>
         {
-            localStorage.setItem("jwt", data.token);
-            queryClient.invalidateQueries({ queryKey: ["user"] })
-            navigate("/")
+            queryClient.invalidateQueries({ queryKey: ["user"] });
+            navigate("/login");
         },
         onError: (error: any) =>
         {
-            alert(error.message)
+            alert(error.message);
         }
-    })
+    });
+
 
     return (
         <Flex
@@ -101,7 +100,7 @@ const Login = () =>
                     fontSize={ "2xl" }
                 >Welcome</Heading>
                 <Box minW={ { base: "90%", md: "468px" } }>
-                    <form onSubmit={ (e) => { e.preventDefault; login(e); } }>
+                    <form onSubmit={ (e) => { e.preventDefault(); signup(); } }>
                         <Stack
                             spacing={ 4 }
                             p="1rem"
@@ -111,7 +110,33 @@ const Login = () =>
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
-                                        children={ <CFaUserAlt color="gray.300" /> }
+                                        children={ <BsTextRight color="gray.300" /> }
+                                    />
+                                    <Input
+                                        type="text"
+                                        value={ firstname }
+                                        placeholder="firstname"
+                                        onChange={ (e) => setFirstname(e.target.value) } />
+                                </InputGroup>
+                            </FormControl>
+                            <FormControl>
+                                <InputGroup>
+                                    <InputLeftElement
+                                        pointerEvents="none"
+                                        children={ <BsTextRight color="gray.300" /> }
+                                    />
+                                    <Input
+                                        type="text"
+                                        value={ lastname }
+                                        placeholder="lastname"
+                                        onChange={ (e) => setLastname(e.target.value) } />
+                                </InputGroup>
+                            </FormControl>
+                            <FormControl>
+                                <InputGroup>
+                                    <InputLeftElement
+                                        pointerEvents="none"
+                                        children={ <FaUserAstronaut color="gray.300" /> }
                                     />
                                     <Input
                                         type="text"
@@ -143,6 +168,7 @@ const Login = () =>
                                     <Link>forgot password?</Link>
                                 </FormHelperText>
                             </FormControl>
+
                             <Button
                                 borderRadius={ 2 }
                                 type="submit"
@@ -151,20 +177,20 @@ const Login = () =>
                                 width="full"
                                 isDisabled={ isCreating }
                             >
-                                { isCreating ? <Spinner size={ "xs" } /> : <Text>Login</Text> }
+                                { isCreating ? <Spinner size={ "xs" } /> : <Text>Signup</Text> }
                             </Button>
                         </Stack>
                     </form>
                 </Box>
             </Stack>
             <Box>
-                New to us?{ " " }
-                <Link background={ "#00ffff" } bgClip="text" href="/register">
-                    Sign Up
+                Have an account?{ " " }
+                <Link background={ "#00ffff" } bgClip="text" href="/login">
+                    Log In
                 </Link>
             </Box>
         </Flex >
     );
 }
 
-export default Login
+export default Signup
