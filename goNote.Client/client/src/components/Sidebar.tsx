@@ -91,7 +91,7 @@ export default function Sidebar()
                     <Text fontSize="xl" fontWeight="semibold" mb={4} textAlign="left">GONOTE</Text>
                     <Divider></Divider>
                     <VStack align="start" spacing={0}>
-                        {menuItems.map((item, index) => (
+                        {menuItems.map((item) => (
                             <Box key={item.label} width="full">
                                 <Button
                                     variant="outline"
