@@ -17,10 +17,10 @@ import
     Stack,
     Text
 } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { FaUserAlt, FaLock } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {useState} from "react";
+import {FaUserAlt, FaLock} from "react-icons/fa";
+import {useNavigate} from "react-router-dom";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -38,7 +38,7 @@ const Login = () =>
     const queryClient = useQueryClient()
     const navigate = useNavigate()
 
-    const { mutate: login, isPending: isCreating } = useMutation({
+    const {mutate: login, isPending: isCreating} = useMutation({
         mutationKey: ["loginUser"],
         mutationFn: async (e: React.FormEvent) =>
         {
@@ -50,7 +50,7 @@ const Login = () =>
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({username, password})
                 })
                 const data = await response.json()
                 console.log(data)
@@ -68,7 +68,7 @@ const Login = () =>
         onSuccess: (data) =>
         {
             localStorage.setItem("jwt", data.token);
-            queryClient.invalidateQueries({ queryKey: ["user"] })
+            queryClient.invalidateQueries({queryKey: ["user"]})
             navigate("/")
         },
         onError: (error: any) =>
@@ -95,15 +95,15 @@ const Login = () =>
                 <Avatar bg="#841e7452" />
                 <Heading
                     bgGradient='linear(to-l, purple.500, #00ffff)'
-                    bgClip={ "text" }
-                    mt={ 2 }
-                    fontWeight={ "semibold" }
-                    fontSize={ "2xl" }
+                    bgClip={"text"}
+                    mt={2}
+                    fontWeight={"semibold"}
+                    fontSize={"2xl"}
                 >Welcome</Heading>
-                <Box minW={ { base: "90%", md: "468px" } }>
-                    <form onSubmit={ (e) => { e.preventDefault; login(e); } }>
+                <Box minW={{base: "90%", md: "468px"}}>
+                    <form onSubmit={(e) => {e.preventDefault; login(e);}}>
                         <Stack
-                            spacing={ 4 }
+                            spacing={4}
                             p="1rem"
                             boxShadow="md"
                         >
@@ -111,13 +111,13 @@ const Login = () =>
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
-                                        children={ <CFaUserAlt color="gray.300" /> }
+                                        children={<CFaUserAlt color="gray.300" />}
                                     />
                                     <Input
                                         type="text"
-                                        value={ username }
+                                        value={username}
                                         placeholder="username"
-                                        onChange={ (e) => setUsername(e.target.value) } />
+                                        onChange={(e) => setUsername(e.target.value)} />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
@@ -125,17 +125,17 @@ const Login = () =>
                                     <InputLeftElement
                                         pointerEvents="none"
                                         color="gray.300"
-                                        children={ <CFaLock color="gray.300" /> }
+                                        children={<CFaLock color="gray.300" />}
                                     />
                                     <Input
-                                        type={ showPassword ? "text" : "password" }
+                                        type={showPassword ? "text" : "password"}
                                         placeholder="password"
-                                        value={ password }
-                                        onChange={ (e) => setPassword(e.target.value) }
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
                                     <InputRightElement width="4.5rem">
-                                        <Button h="1.75rem" size="sm" onClick={ handleShowClick }>
-                                            { showPassword ? "Hide" : "Show" }
+                                        <Button h="1.75rem" size="sm" onClick={handleShowClick}>
+                                            {showPassword ? "Hide" : "Show"}
                                         </Button>
                                     </InputRightElement>
                                 </InputGroup>
@@ -144,22 +144,22 @@ const Login = () =>
                                 </FormHelperText>
                             </FormControl>
                             <Button
-                                borderRadius={ 2 }
+                                borderRadius={2}
                                 type="submit"
                                 variant="solid"
-                                background={ "#841e7452" }
+                                background={"#841e7452"}
                                 width="full"
-                                isDisabled={ isCreating }
+                                isDisabled={isCreating}
                             >
-                                { isCreating ? <Spinner size={ "xs" } /> : <Text>Login</Text> }
+                                {isCreating ? <Spinner size={"xs"} /> : <Text>Login</Text>}
                             </Button>
                         </Stack>
                     </form>
                 </Box>
             </Stack>
             <Box>
-                New to us?{ " " }
-                <Link background={ "#00ffff" } bgClip="text" href="/register">
+                New to us?{" "}
+                <Link background={"#00ffff"} bgClip="text" href="/register">
                     Sign Up
                 </Link>
             </Box>

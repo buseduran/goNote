@@ -55,16 +55,17 @@ const TodoList = () =>
                 fontWeight={"semibold"}
                 textAlign={"center"}
                 my={2}
-                bgGradient='linear(to-l, purple.600, #00ffff)'
+                bgGradient='linear(to-l, purple.500, #00ffff)'
                 bgClip={"text"}>
                 Tasks
             </Text >
             {!isLoading && todos?.length === 0 && (
                 <Stack>
-                    <Text>
-                        No tasks for today
+                    <Text textAlign={"center"}
+                        fontWeight={"thin"}
+                        textDecoration={"ButtonFace"}>
+                        No tasks for today 🙌
                     </Text>
-                    <img src="/gopher.jpg" width={100} height={100}></img>
                 </Stack>
             )}
             <Stack gap={3}>
