@@ -26,7 +26,8 @@ const Footer = () =>
                         ♥
                     </Text>
                 </Stack> */}
-                <Divider borderColor="gray.600" />
+                <Divider borderColor="gray.600" w="80%" mx="auto" />
+
                 <Stack
                     direction={{base: 'column', md: 'row'}}
                     justifyContent="center"
@@ -38,8 +39,6 @@ const Footer = () =>
                         © {new Date().getFullYear()} by buwu  ♥
                     </Text>
                 </Stack>
-
-
             </Box>
         </Container>
     );
