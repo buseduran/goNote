@@ -1,6 +1,7 @@
-import { Box, Stack, Text, Container, Divider } from "@chakra-ui/react";
+import {Box, Stack, Text, Container, Divider} from "@chakra-ui/react";
 
-const Footer = () => {
+const Footer = () =>
+{
     return (
         <Container width="100%" maxW="100%" centerContent>
             <Box
@@ -13,7 +14,6 @@ const Footer = () => {
                 position={"fixed"}
                 bottom={0}
                 zIndex={1}
-
             >
                 {/* <Stack
                     direction={{ base: 'column', md: 'row' }}
@@ -28,7 +28,7 @@ const Footer = () => {
                 </Stack> */}
                 <Divider borderColor="gray.600" />
                 <Stack
-                    direction={{ base: 'column', md: 'row' }}
+                    direction={{base: 'column', md: 'row'}}
                     justifyContent="center"
                     alignItems="center"
                     spacing={5}

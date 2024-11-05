@@ -1,23 +1,25 @@
-import { Container, Stack } from '@chakra-ui/react'
-import Navbar from './components/Navbar'
-import TodoForm from './components/todo-components/TodoForm'
-import TodoList from './components/todo-components/TodoList'
-import Footer from './components/Footer'
+import {Container, Stack} from '@chakra-ui/react';
+import Navbar from './components/Navbar';
+import TodoForm from './components/todo-components/TodoForm';
+import TodoList from './components/todo-components/TodoList';
+import Footer from './components/Footer';
 
-export const BASE_URL = import.meta.env.MODE === "/api"
+export const BASE_URL = import.meta.env.MODE === "/api";
 
-function App() {
+function App()
+{
   return (
-    <Stack minH="100vh" position={"sticky"}>
-      <Navbar />
-      <Container flex="1">
-        <TodoForm />
-        <TodoList />
-      </Container>
-      <Footer />
+    <Stack minH="100vh" direction="row">
+      <Stack flex="1">
+        <Navbar />
+        <Container flex="1">
+          <TodoForm />
+          <TodoList />
+        </Container>
+        <Footer />
+      </Stack>
     </Stack>
-  )
+  );
 }
 
-
-export default App
+export default App;

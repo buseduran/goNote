@@ -54,7 +54,6 @@ const TodoForm = () => {
                 <Button
                     mx={2}
                     type='submit'
-
                 >
                     {isCreating ? <Spinner size={"xs"} /> : <IoMdAdd size={30} />}
                 </Button>

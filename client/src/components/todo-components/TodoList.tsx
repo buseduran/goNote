@@ -1,6 +1,6 @@
-import { Stack, Text } from "@chakra-ui/react"
+import {Stack, Text} from "@chakra-ui/react"
 import TodoItem from "./TodoItem"
-import { useQuery } from "@tanstack/react-query"
+import {useQuery} from "@tanstack/react-query"
 
 export type Todo = {
     id: number
@@ -8,36 +8,43 @@ export type Todo = {
     completed: boolean
 }
 
-const TodoList = () => {
+const TodoList = () =>
+{
     //fetch datas
-    const { data: todos, isLoading, error } = useQuery<Todo[]>({
+    const {data: todos, isLoading, error} = useQuery<Todo[]>({
         queryKey: ["todos"],
-        queryFn: async () => {
-            try {
+        queryFn: async () =>
+        {
+            try
+            {
                 const response = await fetch("http://localhost:5000/api/todos", {
                     method: "GET",
                     headers: {
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`,
+                        "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
                         "Content-Type": "application/json"
                     },
                     credentials: "include"
                 })
                 const data = await response.json()
-                if (!response.ok) {
+                if (!response.ok)
+                {
                     throw new Error(data.message || "Something went wrong")
                 }
                 return data || []
             }
-            catch (error) {
+            catch (error)
+            {
                 console.log(error)
             }
         }
     })
 
-    if (isLoading) {
+    if (isLoading)
+    {
         return <Text>Loading...</Text>
     }
-    if (error) {
+    if (error)
+    {
         return <Text>Error: {error.message}</Text>
     }
 
@@ -59,8 +66,7 @@ const TodoList = () => {
                     </Text>
                     <img src="/gopher.jpg" width={100} height={100}></img>
                 </Stack>
-            )
-            }
+            )}
             <Stack gap={3}>
                 {todos?.map((todo) => (
                     <TodoItem key={todo.id} todo={todo} />

@@ -1,11 +1,12 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Badge, Box, Flex, Input, Spinner } from '@chakra-ui/react'
-import { FaCheckCircle, FaRegCircle } from 'react-icons/fa'
-import { MdDelete } from 'react-icons/md'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
-import { Todo } from './TodoList'
+import {Alert, AlertDescription, AlertIcon, AlertTitle, Badge, Box, Flex, Input, Spinner} from '@chakra-ui/react'
+import {FaCheckCircle, FaRegCircle} from 'react-icons/fa'
+import {MdDelete} from 'react-icons/md'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {useState} from 'react'
+import {Todo} from './TodoList'
 
-const TodoItem = ({ todo }: { todo: Todo }) => {
+const TodoItem = ({todo}: {todo: Todo}) =>
+{
     const queryClient = useQueryClient()
     const [showAlert, setShowAlert] = useState(false)
     const [alertMessage, setAlertMessage] = useState('')
@@ -13,20 +14,23 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
     const [description, setDescription] = useState(todo.body)
 
     //UPDATE BODY
-    const { mutate: updateTodoBody } = useMutation({
+    const {mutate: updateTodoBody} = useMutation({
         mutationKey: ["updateTodoBody"],
-        mutationFn: async () => {
-            try {
-                const response = await fetch(`http://localhost:5000/api/todos/${todo.id}`, {
+        mutationFn: async () =>
+        {
+            try
+            {
+                const response = await fetch(`http://localhost:5000/api/todos/${ todo.id }`, {
                     method: "PATCH",
                     headers: {
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`,
+                        "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
                         "Content-Type": "application/json"
                     },
                     credentials: "include",
-                    body: JSON.stringify({ completed: todo.completed, body: description })
+                    body: JSON.stringify({completed: todo.completed, body: description})
                 })
-                if (!response.ok) {
+                if (!response.ok)
+                {
                     const errorMessage = await response.text();
                     setAlertStatus('error');
                     setAlertMessage(errorMessage || "Something went wrong");
@@ -35,31 +39,36 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
                 }
                 const data = await response.json();
                 return data;
-            } catch (error) {
+            } catch (error)
+            {
                 console.log(error)
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["todos"] })
+        onSuccess: () =>
+        {
+            queryClient.invalidateQueries({queryKey: ["todos"]})
         }
     })
 
-    //UPDATE
-    const { mutate: updateTodoToggle, isPending: isUpdatingToggle } = useMutation({
+    //UPDATE CHECK
+    const {mutate: updateTodoToggle, isPending: isUpdatingToggle} = useMutation({
         mutationKey: ["updateTodoToggle"],
-        mutationFn: async () => {
-            try {
+        mutationFn: async () =>
+        {
+            try
+            {
                 console.log("datalarr " + todo)
-                const response = await fetch(`http://localhost:5000/api/todos/${todo.id}`, {
+                const response = await fetch(`http://localhost:5000/api/todos/${ todo.id }`, {
                     method: "PATCH",
                     headers: {
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`,
+                        "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
                         "Content-Type": "application/json"
                     },
                     credentials: "include",
-                    body: JSON.stringify({ completed: !todo.completed, body: description })
+                    body: JSON.stringify({completed: !todo.completed, body: description})
                 })
-                if (!response.ok) {
+                if (!response.ok)
+                {
                     const errorMessage = await response.text();
                     setAlertStatus('error');
                     setAlertMessage(errorMessage || "Something went wrong");
@@ -69,43 +78,50 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
 
                 const data = await response.json();
                 return data;
-            } catch (error) {
+            } catch (error)
+            {
                 console.log(error)
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["todos"] })
+        onSuccess: () =>
+        {
+            queryClient.invalidateQueries({queryKey: ["todos"]})
         }
     })
 
 
     //DELETE
-    const { mutate: deleteTodo, isPending: isDeleting } = useMutation({
+    const {mutate: deleteTodo, isPending: isDeleting} = useMutation({
         mutationKey: ["deleteTodo"],
-        mutationFn: async () => {
-            try {
-                const response = await fetch(`http://localhost:5000/api/todos/${todo.id}`, {
+        mutationFn: async () =>
+        {
+            try
+            {
+                const response = await fetch(`http://localhost:5000/api/todos/${ todo.id }`, {
                     headers: {
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`,
+                        "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
                         "Content-Type": "application/json"
                     },
                     credentials: "include",
                     method: "DELETE"
                 })
                 const data = await response.json()
-                if (!response.ok) {
+                if (!response.ok)
+                {
                     setAlertStatus('error')
                     setAlertMessage(data.message || "Something went wrong")
                     setShowAlert(true)
                     return;
                 }
                 return data
-            } catch (error) {
+            } catch (error)
+            {
                 console.log(error)
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["todos"] })
+        onSuccess: () =>
+        {
+            queryClient.invalidateQueries({queryKey: ["todos"]})
         }
     })
 
@@ -138,9 +154,8 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
                         minWidth={"200px"}
                         maxWidth={"300px"}
                         border={'none'}
+                        textDecoration={todo.completed ? "line-through" : "none"}
                     >
-
-
                     </Input>
 
                     {todo.completed && (
