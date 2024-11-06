@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	CollectionAssetPrice = "assetprices"
+	CollectionAssetPrice = "asset_prices"
 )
 
 // tarih bazlı geçmiş fiyat listesi
