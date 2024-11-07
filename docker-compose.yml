@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: ./goNote.Api  # Go API projesi için klasör yolu
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.api
     ports:
       - "5000:5000"
     networks:
@@ -13,7 +13,7 @@ services:
   client:
     build:
       context: ./goNote.Client/client  # React Client projesi için klasör yolu
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.client
     ports:
       - "5173:80"
     networks:

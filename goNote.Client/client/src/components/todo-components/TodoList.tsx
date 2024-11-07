@@ -1,6 +1,7 @@
 import {Stack, Text} from "@chakra-ui/react"
 import TodoItem from "./TodoItem"
 import {useQuery} from "@tanstack/react-query"
+import {useState} from "react"
 
 export type Todo = {
     id: number
@@ -10,6 +11,8 @@ export type Todo = {
 
 const TodoList = () =>
 {
+    const [redirecting, setRedirecting] = useState(false);
+
     //fetch datas
     const {data: todos, isLoading, error} = useQuery<Todo[]>({
         queryKey: ["todos"],
@@ -23,8 +26,16 @@ const TodoList = () =>
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
                         "Content-Type": "application/json"
                     },
-                    credentials: "include"
+                    credentials: "include" //if using cookies
                 })
+
+                if (response.status === 401)
+                {
+                    setRedirecting(true)
+                    window.location.href = "/login"
+                    return new Promise(() => {})
+                }
+
                 const data = await response.json()
                 if (!response.ok)
                 {
@@ -35,6 +46,7 @@ const TodoList = () =>
             catch (error)
             {
                 console.log(error)
+                return Promise.reject(error)
             }
         }
     })
@@ -47,6 +59,10 @@ const TodoList = () =>
     {
         return <Text>Error: {error.message}</Text>
     }
+
+    if (redirecting) return null; // Prevent rendering while redirecting
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <>

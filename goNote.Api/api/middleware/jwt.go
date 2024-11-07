@@ -24,15 +24,17 @@ func JWTProtected(c *fiber.Ctx) error {
 	// Handle token parsing errors
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "Unauthorized",
+			"redirect": true,
+			"message":  "Unauthorized, please log in",
 		})
 	}
 
 	// Extract claims from token
 	claims, ok := token.Claims.(*jwt.MapClaims)
 	if !ok || !token.Valid {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Failed to parse claims",
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"redirect": true,
+			"message":  "Unauthorized, please log in",
 		})
 	}
 
@@ -40,15 +42,17 @@ func JWTProtected(c *fiber.Ctx) error {
 	id, ok := (*claims)["user_id"].(string)
 	if !ok {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "Unauthorized",
+			"redirect": true,
+			"message":  "Unauthorized, please log in",
 		})
 	}
 
 	// Convert the user ID to an ObjectID
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Invalid user ID",
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"redirect": true,
+			"message":  "Unauthorized, please log in",
 		})
 	}
 
