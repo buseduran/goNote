@@ -1,23 +1,21 @@
-# Go için base image
+# Base image for Go
 FROM golang:1.23.2-alpine
 
-# Çalışma dizinini ayarla
+# Set the working directory
 WORKDIR /app
 
-# go.mod ve go.sum dosyalarını kopyala
+# Copy go.mod and go.sum files and download dependencies
 COPY go.mod go.sum ./
-
-# Bağımlılıkları indir
 RUN go mod download
 
-# Kalan dosyaları kopyala
+# Copy the remaining application files
 COPY . .
 
-# Uygulamayı derle
-RUN go build -o main .
+# Build the Go application and output the binary as 'app'
+RUN go build -o app .
 
-# Uygulamanın çalışacağı port
+# Expose the port that the application will run on
 EXPOSE 5000
 
-# Uygulamayı başlat
-CMD ["./main"]
+# Run the application
+CMD ["./app"]

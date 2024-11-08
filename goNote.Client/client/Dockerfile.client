@@ -1,24 +1,27 @@
-# Node.js base image kullanıyoruz
+# Stage 1: Build the React application
 FROM node:20-alpine AS build
 
-# Çalışma dizini ayarla
+# Set the working directory
 WORKDIR /app
 
-# package.json ve package-lock.json dosyalarını kopyala ve bağımlılıkları yükle
+# Copy package files and install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Kalan dosyaları kopyala
+# Copy the remaining application files
 COPY . .
 
-# React uygulamasını build et
+# Build the React application
 RUN npm run build
 
-# Nginx aşaması
+# Stage 2: Serve the built React application with Nginx
 FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html  # `dist` yerine `build` klasörünü kullan
 
-# Nginx'in çalışacağı port
+# Copy the build output from the previous stage to the Nginx HTML directory
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose the port for Nginx
 EXPOSE 80
 
+# Start Nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
