@@ -33,7 +33,7 @@ export default function Navbar()
             localStorage.removeItem("jwt");
             try
             {
-                const response = await fetch("https://gonote.up.railway.app/logout", {
+                const response = await fetch("/api/logout", {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
