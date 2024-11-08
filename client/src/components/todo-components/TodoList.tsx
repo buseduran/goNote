@@ -32,7 +32,7 @@ const TodoList = () =>
                 if (response.status === 401)
                 {
                     setRedirecting(true)
-                    window.location.href = "/login"
+                    window.location.href = "/api/login"
                     return new Promise(() => {})
                 }
 
