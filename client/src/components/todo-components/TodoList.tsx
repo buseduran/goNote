@@ -20,7 +20,7 @@ const TodoList = () =>
         {
             try
             {
-                const response = await fetch("/api/todos", {
+                const response = await fetch("/todos", {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,

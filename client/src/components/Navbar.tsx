@@ -33,7 +33,7 @@ export default function Navbar()
             localStorage.removeItem("jwt");
             try
             {
-                const response = await fetch("/api/logout", {
+                const response = await fetch("/logout", {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
