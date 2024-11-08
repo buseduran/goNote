@@ -17,12 +17,12 @@ import
     Stack,
     Text
 } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { BsTextRight } from "react-icons/bs";
-import { FaLock } from "react-icons/fa";
-import { FaUserAstronaut } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {useState} from "react";
+import {BsTextRight} from "react-icons/bs";
+import {FaLock} from "react-icons/fa";
+import {FaUserAstronaut} from "react-icons/fa6";
+import {useNavigate} from "react-router-dom";
 
 const CFaLock = chakra(FaLock);
 
@@ -40,18 +40,18 @@ const Signup = () =>
     const queryClient = useQueryClient()
     const navigate = useNavigate()
 
-    const { mutate: signup, isPending: isCreating } = useMutation({
+    const {mutate: signup, isPending: isCreating} = useMutation({
         mutationKey: ["signupUser"],
         mutationFn: async () =>
         {
             try
             {
-                const response = await fetch("http://localhost:5000/api/register", {
+                const response = await fetch("/api/register", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ firstname: firstname, lastname: lastname, username: username, password: password })
+                    body: JSON.stringify({firstname: firstname, lastname: lastname, username: username, password: password})
                 });
                 const data = await response.json();
                 if (!response.ok)
@@ -66,7 +66,7 @@ const Signup = () =>
         },
         onSuccess: () =>
         {
-            queryClient.invalidateQueries({ queryKey: ["user"] });
+            queryClient.invalidateQueries({queryKey: ["user"]});
             navigate("/login");
         },
         onError: (error: any) =>
@@ -94,15 +94,15 @@ const Signup = () =>
                 <Avatar bg="#841e7452" />
                 <Heading
                     bgGradient='linear(to-l, purple.500, #00ffff)'
-                    bgClip={ "text" }
-                    mt={ 2 }
-                    fontWeight={ "semibold" }
-                    fontSize={ "2xl" }
+                    bgClip={"text"}
+                    mt={2}
+                    fontWeight={"semibold"}
+                    fontSize={"2xl"}
                 >Welcome</Heading>
-                <Box minW={ { base: "90%", md: "468px" } }>
-                    <form onSubmit={ (e) => { e.preventDefault(); signup(); } }>
+                <Box minW={{base: "90%", md: "468px"}}>
+                    <form onSubmit={(e) => {e.preventDefault(); signup();}}>
                         <Stack
-                            spacing={ 4 }
+                            spacing={4}
                             p="1rem"
                             boxShadow="md"
                         >
@@ -110,39 +110,39 @@ const Signup = () =>
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
-                                        children={ <BsTextRight color="gray.300" /> }
+                                        children={<BsTextRight color="gray.300" />}
                                     />
                                     <Input
                                         type="text"
-                                        value={ firstname }
+                                        value={firstname}
                                         placeholder="firstname"
-                                        onChange={ (e) => setFirstname(e.target.value) } />
+                                        onChange={(e) => setFirstname(e.target.value)} />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
-                                        children={ <BsTextRight color="gray.300" /> }
+                                        children={<BsTextRight color="gray.300" />}
                                     />
                                     <Input
                                         type="text"
-                                        value={ lastname }
+                                        value={lastname}
                                         placeholder="lastname"
-                                        onChange={ (e) => setLastname(e.target.value) } />
+                                        onChange={(e) => setLastname(e.target.value)} />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
-                                        children={ <FaUserAstronaut color="gray.300" /> }
+                                        children={<FaUserAstronaut color="gray.300" />}
                                     />
                                     <Input
                                         type="text"
-                                        value={ username }
+                                        value={username}
                                         placeholder="username"
-                                        onChange={ (e) => setUsername(e.target.value) } />
+                                        onChange={(e) => setUsername(e.target.value)} />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
@@ -150,17 +150,17 @@ const Signup = () =>
                                     <InputLeftElement
                                         pointerEvents="none"
                                         color="gray.300"
-                                        children={ <CFaLock color="gray.300" /> }
+                                        children={<CFaLock color="gray.300" />}
                                     />
                                     <Input
-                                        type={ showPassword ? "text" : "password" }
+                                        type={showPassword ? "text" : "password"}
                                         placeholder="password"
-                                        value={ password }
-                                        onChange={ (e) => setPassword(e.target.value) }
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
                                     <InputRightElement width="4.5rem">
-                                        <Button h="1.75rem" size="sm" onClick={ handleShowClick }>
-                                            { showPassword ? "Hide" : "Show" }
+                                        <Button h="1.75rem" size="sm" onClick={handleShowClick}>
+                                            {showPassword ? "Hide" : "Show"}
                                         </Button>
                                     </InputRightElement>
                                 </InputGroup>
@@ -170,22 +170,22 @@ const Signup = () =>
                             </FormControl>
 
                             <Button
-                                borderRadius={ 2 }
+                                borderRadius={2}
                                 type="submit"
                                 variant="solid"
-                                background={ "#841e7452" }
+                                background={"#841e7452"}
                                 width="full"
-                                isDisabled={ isCreating }
+                                isDisabled={isCreating}
                             >
-                                { isCreating ? <Spinner size={ "xs" } /> : <Text>Signup</Text> }
+                                {isCreating ? <Spinner size={"xs"} /> : <Text>Signup</Text>}
                             </Button>
                         </Stack>
                     </form>
                 </Box>
             </Stack>
             <Box>
-                Have an account?{ " " }
-                <Link background={ "#00ffff" } bgClip="text" href="/login">
+                Have an account?{" "}
+                <Link background={"#00ffff"} bgClip="text" href="/login">
                     Log In
                 </Link>
             </Box>
