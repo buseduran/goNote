@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   api:
     build:
@@ -9,7 +8,6 @@ services:
       - "5000:5000"
     networks:
       - gonote-network
-
   client:
     build:
       context: ./goNote.Client/client  # React Client projesi için klasör yolu
@@ -18,7 +16,6 @@ services:
       - "5173:80"
     networks:
       - gonote-network
-
 networks:
   gonote-network:
     driver: bridge
