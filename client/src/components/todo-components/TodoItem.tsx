@@ -4,6 +4,7 @@ import {MdDelete} from 'react-icons/md'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {useState} from 'react'
 import {Todo} from './TodoList'
+import {BASE_URL} from '../../App'
 
 const TodoItem = ({todo}: {todo: Todo}) =>
 {
@@ -20,7 +21,7 @@ const TodoItem = ({todo}: {todo: Todo}) =>
         {
             try
             {
-                const response = await fetch(`/api/todos/${ todo.id }`, {
+                const response = await fetch(BASE_URL + `/todos/${ todo.id }`, {
                     method: "PATCH",
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
@@ -58,7 +59,7 @@ const TodoItem = ({todo}: {todo: Todo}) =>
             try
             {
                 console.log("datalarr " + todo)
-                const response = await fetch(`/api/todos/${ todo.id }`, {
+                const response = await fetch(BASE_URL + `/todos/${ todo.id }`, {
                     method: "PATCH",
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
@@ -97,7 +98,7 @@ const TodoItem = ({todo}: {todo: Todo}) =>
         {
             try
             {
-                const response = await fetch(`/api/todos/${ todo.id }`, {
+                const response = await fetch(BASE_URL + `/todos/${ todo.id }`, {
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
                         "Content-Type": "application/json"

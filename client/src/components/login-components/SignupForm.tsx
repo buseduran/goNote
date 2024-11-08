@@ -23,6 +23,7 @@ import {BsTextRight} from "react-icons/bs";
 import {FaLock} from "react-icons/fa";
 import {FaUserAstronaut} from "react-icons/fa6";
 import {useNavigate} from "react-router-dom";
+import {BASE_URL} from "../../App";
 
 const CFaLock = chakra(FaLock);
 
@@ -46,7 +47,7 @@ const Signup = () =>
         {
             try
             {
-                const response = await fetch("/api/register", {
+                const response = await fetch(BASE_URL + "/register", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

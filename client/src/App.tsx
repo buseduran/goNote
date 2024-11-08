@@ -6,7 +6,9 @@ import TodoList from "./components/todo-components/TodoList";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 
-export const BASE_URL = import.meta.env.MODE === "/api";
+export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5000/api" : "/api";
+
+console.log(import.meta.env.MODE);
 
 function App()
 {

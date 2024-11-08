@@ -2,6 +2,7 @@ import {Stack, Text} from "@chakra-ui/react"
 import TodoItem from "./TodoItem"
 import {useQuery} from "@tanstack/react-query"
 import {useState} from "react"
+import {BASE_URL} from "../../App"
 
 export type Todo = {
     id: number
@@ -20,7 +21,7 @@ const TodoList = () =>
         {
             try
             {
-                const response = await fetch("/api/todos", {
+                const response = await fetch(BASE_URL + "/todos", {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
@@ -32,8 +33,8 @@ const TodoList = () =>
                 if (response.status === 401)
                 {
                     setRedirecting(true)
-                    window.location.href = "/api/login"
-                    return new Promise(() => {})
+                    //window.location.href = BASE_URL + "/login"
+                    //return new Promise(() => {})
                 }
 
                 const data = await response.json()

@@ -2,6 +2,7 @@ import {Button, Flex, Input, Spinner} from "@chakra-ui/react";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useState} from "react";
 import {IoMdAdd} from "react-icons/io";
+import {BASE_URL} from "../../App";
 
 const TodoForm = () =>
 {
@@ -16,7 +17,7 @@ const TodoForm = () =>
             e.preventDefault()
             try
             {
-                const response = await fetch("/api/todos", {
+                const response = await fetch(BASE_URL + "/todos", {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,

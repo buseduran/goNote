@@ -21,6 +21,7 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {useState} from "react";
 import {FaUserAlt, FaLock} from "react-icons/fa";
 import {useNavigate} from "react-router-dom";
+import {BASE_URL} from "../../App";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -45,7 +46,7 @@ const Login = () =>
             e.preventDefault()
             try
             {
-                const response = await fetch("/api/login", {
+                const response = await fetch(BASE_URL + "/login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
