@@ -8,11 +8,9 @@ COPY go.mod go.sum ./
 RUN go mod download
 # Kalan dosyaları kopyala
 COPY . .
-
-RUN ls -la /app
-
-RUN go build -o out .
+# Uygulamayı derle
+RUN go build -o main .
 # Uygulamanın çalışacağı port
 EXPOSE 5000
-CMD ["./out"]
-
+# Uygulamayı başlat
+CMD ["./main"]
