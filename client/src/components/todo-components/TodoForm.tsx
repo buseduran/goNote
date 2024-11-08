@@ -16,7 +16,7 @@ const TodoForm = () =>
             e.preventDefault()
             try
             {
-                const response = await fetch("/todos", {
+                const response = await fetch("/api/todos", {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
