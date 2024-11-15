@@ -6,4 +6,5 @@ func SetupRoutes(c *fiber.App) {
 	publicRouter := c.Group("/api")
 	NewTodoRouter(publicRouter)
 	NewUserRouter(publicRouter)
+	NewAssetRouter(publicRouter)
 }
