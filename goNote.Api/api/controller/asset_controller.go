@@ -52,3 +52,11 @@ func (assetController *AssetController) UpdateAsset(c *fiber.Ctx) error {
 	}
 	return c.Status(200).JSON(fiber.StatusOK)
 }
+func (assetController *AssetController) GetAll(c *fiber.Ctx) error {
+	assets, err := assetController.AssetUseCase.GetAll()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(assets)
+}

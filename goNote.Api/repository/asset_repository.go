@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/buwud/goNote/domain"
@@ -54,4 +55,18 @@ func (t *assetRepository) UpdateAsset(assetID string, asset *domain.Asset) error
 		return err
 	}
 	return nil
+}
+func (t *assetRepository) GetAll() (*[]domain.Asset, error) {
+	var assets []domain.Asset
+	cursor, err := t.collection.Find(context.Background(), bson.M{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer cursor.Close(context.Background())
+	for cursor.Next(context.Background()) {
+		var asset domain.Asset
+		cursor.Decode(&asset)
+		assets = append(assets, asset)
+	}
+	return &assets, nil
 }

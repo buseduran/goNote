@@ -23,3 +23,6 @@ func (t *assetUseCase) DeleteAsset(assetID string, c *fiber.Ctx) error {
 func (t *assetUseCase) UpdateAsset(assetID string, asset *domain.Asset) error {
 	return t.assetRepo.UpdateAsset(assetID, asset)
 }
+func (t *assetUseCase) GetAll() (*[]domain.Asset, error) {
+	return t.assetRepo.GetAll()
+}

@@ -26,10 +26,12 @@ type AssetRepository interface {
 	CreateAsset(asset *Asset) (*mongo.InsertOneResult, error)
 	DeleteAsset(assetID string, c *fiber.Ctx) error
 	UpdateAsset(assetID string, asset *Asset) error
+	GetAll() (*[]Asset, error)
 }
 
 type AssetUseCase interface {
 	CreateAsset(asset *Asset) (*mongo.InsertOneResult, error)
 	DeleteAsset(assetID string, c *fiber.Ctx) error
 	UpdateAsset(assetID string, asset *Asset) error
+	GetAll() (*[]Asset, error)
 }
