@@ -1,14 +1,13 @@
 {
     "configurations": [
-        
         {
             "type": "go",
             "request": "launch",
             "name": "Launch Go Program",
-            "program": "${workspaceFolder}/${input:programPath}",
+            "program": "${workspaceFolder}/goNote.Api/${input:programPath}",
             "mode": "debug",
-            "cwd": "${workspaceFolder}",
-            "envFile": "${workspaceFolder}/.env",
+            "cwd": "${workspaceFolder}/goNote.Api",
+            "envFile": "${workspaceFolder}/goNote.Api/.env",
             "args": []
         },
         {
@@ -17,24 +16,9 @@
             "request": "attach",
             "mode": "local",
             "processId": 0
-        },
-        {
-            "type": "go",
-            "request": "launch",
-            "name": "Launch Go Program",
-            "program": "${workspaceFolder}/${input:programPath}",
-            "mode": "debug",
-            "cwd": "${workspaceFolder}",
-            "envFile": "${workspaceFolder}/.env",
-            "args": []
         }
     ],
     "inputs": [
-        {
-            "type": "promptString",
-            "id": "programPath",
-            "description": "Path to the Go program file"
-        },
         {
             "type": "promptString",
             "id": "programPath",

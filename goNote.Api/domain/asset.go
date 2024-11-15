@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/buwud/goNote/domain/constants/units"
+	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -23,8 +24,12 @@ type Asset struct {
 
 type AssetRepository interface {
 	CreateAsset(asset *Asset) (*mongo.InsertOneResult, error)
+	DeleteAsset(assetID string, c *fiber.Ctx) error
+	UpdateAsset(assetID string, asset *Asset) error
 }
 
 type AssetUseCase interface {
 	CreateAsset(asset *Asset) (*mongo.InsertOneResult, error)
+	DeleteAsset(assetID string, c *fiber.Ctx) error
+	UpdateAsset(assetID string, asset *Asset) error
 }

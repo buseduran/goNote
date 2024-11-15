@@ -76,6 +76,7 @@ func (t *todoRepository) UpdateTodo(id string, todo *models.Todo) error {
 	}
 	return nil
 }
+
 func (t *todoRepository) DeleteTodo(id string, c *fiber.Ctx) error {
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {

@@ -29,3 +29,26 @@ func (assetController *AssetController) CreateAsset(c *fiber.Ctx) error {
 	asset.ID = result.InsertedID.(primitive.ObjectID)
 	return c.Status(fiber.StatusOK).JSON(asset)
 }
+func (AssetController *AssetController) DeleteAsset(c *fiber.Ctx) error {
+	assetID := c.Params("id")
+	err := AssetController.AssetUseCase.DeleteAsset(assetID, c)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.SendStatus(fiber.StatusOK)
+}
+func (assetController *AssetController) UpdateAsset(c *fiber.Ctx) error {
+	asset := new(domain.Asset)
+	if err := c.BodyParser(asset); err != nil {
+		return err
+	}
+	if asset.Name == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "asset name cannot be empty"})
+	}
+	assetID := c.Params("id")
+	err := assetController.AssetUseCase.UpdateAsset(assetID, asset)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(200).JSON(fiber.StatusOK)
+}
