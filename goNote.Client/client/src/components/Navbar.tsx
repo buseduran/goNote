@@ -18,7 +18,6 @@ import {BiLogOutCircle} from "react-icons/bi";
 import {IoMoon} from "react-icons/io5";
 import {LuSun} from "react-icons/lu";
 import {useNavigate} from "react-router-dom";
-import {BASE_URL} from "../App";
 
 export default function Navbar()
 {
@@ -34,7 +33,7 @@ export default function Navbar()
             localStorage.removeItem("jwt");
             try
             {
-                const response = await fetch(BASE_URL + "/logout", {
+                const response = await fetch("http://localhost:5000/api/logout", {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,

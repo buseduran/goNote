@@ -2,7 +2,6 @@ import {Stack, Text} from "@chakra-ui/react"
 import TodoItem from "./TodoItem"
 import {useQuery} from "@tanstack/react-query"
 import {useState} from "react"
-import {BASE_URL} from "../../App"
 
 export type Todo = {
     id: number
@@ -21,7 +20,7 @@ const TodoList = () =>
         {
             try
             {
-                const response = await fetch(BASE_URL + "/todos", {
+                const response = await fetch("http://localhost:5000/api/todos", {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${ localStorage.getItem("jwt") }`,
