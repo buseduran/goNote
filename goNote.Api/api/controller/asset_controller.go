@@ -29,9 +29,9 @@ func (assetController *AssetController) CreateAsset(c *fiber.Ctx) error {
 	asset.ID = result.InsertedID.(primitive.ObjectID)
 	return c.Status(fiber.StatusOK).JSON(asset)
 }
-func (AssetController *AssetController) DeleteAsset(c *fiber.Ctx) error {
+func (assetController *AssetController) DeleteAsset(c *fiber.Ctx) error {
 	assetID := c.Params("id")
-	err := AssetController.AssetUseCase.DeleteAsset(assetID, c)
+	err := assetController.AssetUseCase.DeleteAsset(assetID, c)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
