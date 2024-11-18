@@ -12,12 +12,12 @@ const (
 )
 
 // tarih bazlı geçmiş fiyat listesi
-type AssetPrices struct {
-	ID         primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-	AssetID    primitive.ObjectID `json:"assetID" bson:"assetID"`
-	Currency   constants.Currency `json:"currency" bson:"currency"`
-	ValueInTRY float64            `json:"valueInTRY"`
-	Timestamp  time.Time          `json:"timestamp" bson:"timestamp"`
+type AssetPrice struct {
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	AssetID   primitive.ObjectID `json:"assetID" bson:"assetID"`
+	Currency  constants.Currency `json:"currency" bson:"currency"`
+	Price     float64            `json:"price" bson:"price"`
+	Timestamp time.Time          `json:"timestamp" bson:"timestamp"`
 }
 
 type AssetPriceRepository interface {

@@ -25,7 +25,6 @@ func (t *assetRepository) CreateAsset(asset *domain.Asset) (*mongo.InsertOneResu
 	asset.UpdatedAt = time.Now()
 	return t.collection.InsertOne(context.Background(), asset)
 }
-
 func (t *assetRepository) DeleteAsset(assetID string, c *fiber.Ctx) error {
 	objectID, err := primitive.ObjectIDFromHex(assetID)
 	if err != nil {
