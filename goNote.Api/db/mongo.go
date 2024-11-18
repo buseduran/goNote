@@ -16,9 +16,10 @@ type Database struct {
 	DB *mongo.Database
 }
 type Collection struct {
-	TodoCollection  *mongo.Collection
-	UserCollection  *mongo.Collection
-	AssetCollection *mongo.Collection
+	TodoCollection       *mongo.Collection
+	UserCollection       *mongo.Collection
+	AssetCollection      *mongo.Collection
+	AssetPriceCollection *mongo.Collection
 }
 
 var (
@@ -51,8 +52,9 @@ func GetConnection() Database {
 func GetCollections() Collection {
 	db := GetConnection().DB
 	return Collection{
-		TodoCollection:  db.Collection(domain.CollectionTodo),
-		UserCollection:  db.Collection(domain.CollectionUser),
-		AssetCollection: db.Collection(domain.CollectionAsset),
+		TodoCollection:       db.Collection(domain.CollectionTodo),
+		UserCollection:       db.Collection(domain.CollectionUser),
+		AssetCollection:      db.Collection(domain.CollectionAsset),
+		AssetPriceCollection: db.Collection(domain.CollectionAssetPrice),
 	}
 }

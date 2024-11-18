@@ -56,7 +56,7 @@ func (t *assetPriceRepository) UpdateAssetPrice(assetPriceID string, assetPrice 
 	return nil
 }
 
-func (t *assetRepository) GetAssetPriceHistory(c *fiber.Ctx) error {
+func (t *assetPriceRepository) GetAssetPriceHistory(c *fiber.Ctx) error {
 	assetID := c.Query("assetID")
 	if assetID == "" {
 		return c.Status(400).SendString("AssetID is required")

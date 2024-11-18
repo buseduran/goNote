@@ -7,4 +7,5 @@ func SetupRoutes(c *fiber.App) {
 	NewTodoRouter(publicRouter)
 	NewUserRouter(publicRouter)
 	NewAssetRouter(publicRouter)
+	NewAssetPriceRouter(publicRouter)
 }
