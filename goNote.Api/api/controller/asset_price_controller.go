@@ -56,9 +56,9 @@ func (assetPriceController *AssetPriceController) UpdateAssetPrice(c *fiber.Ctx)
 	return c.Status(200).JSON(fiber.StatusOK)
 }
 func (assetPriceController *AssetPriceController) GetAssetPriceHistory(c *fiber.Ctx) error {
-	err := assetPriceController.AssetPriceUseCase.GetAssetPriceHistory(c)
+	prices, err := assetPriceController.AssetPriceUseCase.GetAssetPriceHistory(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
-	return c.Status(200).JSON(fiber.StatusOK)
+	return c.Status(200).JSON(prices)
 }

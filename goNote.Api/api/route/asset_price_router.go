@@ -20,6 +20,8 @@ func NewAssetPriceRouter(publicRouter fiber.Router) {
 	assetPriceController := &controller.AssetPriceController{
 		AssetPriceUseCase: assetPriceUseCase,
 	}
-
-	publicRouter.Get("/assetprices", assetPriceController.GetAssetPriceHistory)
+	publicRouter.Post("/assetprice", assetPriceController.CreateAssetPrice)
+	publicRouter.Delete("/assetprice/:id", assetPriceController.DeleteAssetPrice)
+	publicRouter.Patch("/assetprice/:id", assetPriceController.UpdateAssetPrice)
+	publicRouter.Get("/assetprice", assetPriceController.GetAssetPriceHistory)
 }

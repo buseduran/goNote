@@ -56,16 +56,16 @@ func (t *assetPriceRepository) UpdateAssetPrice(assetPriceID string, assetPrice 
 	return nil
 }
 
-func (t *assetPriceRepository) GetAssetPriceHistory(c *fiber.Ctx) error {
+func (t *assetPriceRepository) GetAssetPriceHistory(c *fiber.Ctx) (map[string]interface{}, error) {
 	assetID := c.Query("assetID")
 	if assetID == "" {
-		return c.Status(400).SendString("AssetID is required")
+		return nil, c.Status(400).SendString("AssetID is required")
 	}
 
 	// Convert assetID to ObjectID
 	objAssetID, err := primitive.ObjectIDFromHex(assetID)
 	if err != nil {
-		return c.Status(400).SendString("Invalid AssetID")
+		return nil, c.Status(400).SendString("Invalid AssetID")
 	}
 
 	startDate := c.Query("startDate")
@@ -83,13 +83,13 @@ func (t *assetPriceRepository) GetAssetPriceHistory(c *fiber.Ctx) error {
 	if startDate != "" {
 		parsedStartDate, err = time.Parse("2006-01-02", startDate)
 		if err != nil {
-			return c.Status(400).SendString("Invalid startDate format. Use YYYY-MM-DD")
+			return nil, c.Status(400).SendString("Invalid startDate format. Use YYYY-MM-DD")
 		}
 	}
 	if endDate != "" {
 		parsedEndDate, err = time.Parse("2006-01-02", endDate)
 		if err != nil {
-			return c.Status(400).SendString("Invalid endDate format. Use YYYY-MM-DD")
+			return nil, c.Status(400).SendString("Invalid endDate format. Use YYYY-MM-DD")
 		}
 	}
 
@@ -115,25 +115,32 @@ func (t *assetPriceRepository) GetAssetPriceHistory(c *fiber.Ctx) error {
 			SetSort(bson.M{"timestamp": -1}),
 	)
 	if err != nil {
-		return c.Status(500).SendString("Error fetching prices history")
+		return nil, c.Status(500).SendString("Error fetching prices history")
 	}
 	defer cursor.Close(c.Context())
 
 	var prices []domain.AssetPrice
 	if err = cursor.All(c.Context(), &prices); err != nil {
-		return c.Status(500).SendString("Error decoding prices history")
+		return nil, c.Status(500).SendString("Error decoding prices history")
+	}
+
+	mappedPrices := make([]map[string]interface{}, len(prices))
+	for i, price := range prices {
+		mappedPrices[i] = price.ResponseMap()
 	}
 
 	// Include metadata if needed
 	total, err := t.collection.CountDocuments(c.Context(), filter)
 	if err != nil {
-		return c.Status(500).SendString("Error counting total documents")
+		return nil, c.Status(500).SendString("Error counting total documents")
 	}
 
-	return c.JSON(fiber.Map{
-		"data":     prices,
+	response := map[string]interface{}{
+		"data":     mappedPrices,
 		"page":     page,
 		"pageSize": pageSize,
 		"total":    total,
-	})
+	}
+
+	return response, nil
 }

@@ -23,6 +23,6 @@ func (t *assetPriceUseCase) DeleteAssetPrice(assetPriceID string, c *fiber.Ctx) 
 func (t *assetPriceUseCase) UpdateAssetPrice(assetPriceID string, assetPrice *models.UpdateAssetPrice) error {
 	return t.assetPriceRepo.UpdateAssetPrice(assetPriceID, assetPrice)
 }
-func (t *assetPriceUseCase) GetAssetPriceHistory(c *fiber.Ctx) error {
+func (t *assetPriceUseCase) GetAssetPriceHistory(c *fiber.Ctx) (map[string]interface{}, error) {
 	return t.assetPriceRepo.GetAssetPriceHistory(c)
 }
