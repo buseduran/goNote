@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"time"
+
 	"github.com/buwud/goNote/domain"
 	"github.com/buwud/goNote/domain/models"
 	"github.com/gofiber/fiber/v2"
@@ -56,7 +58,36 @@ func (assetPriceController *AssetPriceController) UpdateAssetPrice(c *fiber.Ctx)
 	return c.Status(200).JSON(fiber.StatusOK)
 }
 func (assetPriceController *AssetPriceController) GetAssetPriceHistory(c *fiber.Ctx) error {
-	prices, err := assetPriceController.AssetPriceUseCase.GetAssetPriceHistory(c)
+	assetID := c.Query("assetID")
+	if assetID == "" {
+		return c.Status(400).SendString("AssetID is required")
+	}
+	// Convert assetID to ObjectID
+	objAssetID, err := primitive.ObjectIDFromHex(assetID)
+	if err != nil {
+		return c.Status(400).SendString("Invalid AssetID")
+	}
+	startDate := c.Query("startDate")
+	endDate := c.Query("endDate")
+	page := c.QueryInt("page", 1)
+	pageSize := c.QueryInt("pageSize", 50)
+
+	// Parse startDate and endDate to time.Time
+	var parsedStartDate, parsedEndDate time.Time
+	if startDate != "" {
+		parsedStartDate, err = time.Parse("2006-01-02", startDate)
+		if err != nil {
+			return c.Status(400).SendString("Invalid startDate format. Use YYYY-MM-DD")
+		}
+	}
+	if endDate != "" {
+		parsedEndDate, err = time.Parse("2006-01-02", endDate)
+		if err != nil {
+			return c.Status(400).SendString("Invalid endDate format. Use YYYY-MM-DD")
+		}
+	}
+
+	prices, err := assetPriceController.AssetPriceUseCase.GetAssetPriceHistory(objAssetID, parsedStartDate, parsedEndDate, page, pageSize, c.Context())
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}

@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"time"
 
 	"github.com/buwud/goNote/domain/constants"
@@ -37,11 +38,11 @@ type AssetPriceRepository interface {
 	CreateAssetPrice(assetPrice *AssetPrice) (*mongo.InsertOneResult, error)
 	DeleteAssetPrice(assetPriceID string, c *fiber.Ctx) error
 	UpdateAssetPrice(assetPriceID string, assetPrice *models.UpdateAssetPrice) error
-	GetAssetPriceHistory(c *fiber.Ctx) (map[string]interface{}, error)
+	GetAssetPriceHistory(assetID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error)
 }
 type AssetPriceUseCase interface {
 	CreateAssetPrice(assetPrice *AssetPrice) (*mongo.InsertOneResult, error)
 	DeleteAssetPrice(assetPriceID string, c *fiber.Ctx) error
 	UpdateAssetPrice(assetPriceID string, assetPrice *models.UpdateAssetPrice) error
-	GetAssetPriceHistory(c *fiber.Ctx) (map[string]interface{}, error)
+	GetAssetPriceHistory(assetID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error)
 }

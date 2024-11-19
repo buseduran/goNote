@@ -74,3 +74,5 @@ func (t *assetRepository) CreateUserAsset(userAsset *domain.UserAsset) (*mongo.I
 	userAsset.UpdatedAt = time.Now()
 	return t.collection.InsertOne(context.Background(), userAsset)
 }
+
+//func (t *assetRepository) GetUserAssetPagination()

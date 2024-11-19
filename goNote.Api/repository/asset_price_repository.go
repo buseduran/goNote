@@ -56,58 +56,27 @@ func (t *assetPriceRepository) UpdateAssetPrice(assetPriceID string, assetPrice 
 	return nil
 }
 
-func (t *assetPriceRepository) GetAssetPriceHistory(c *fiber.Ctx) (map[string]interface{}, error) {
-	assetID := c.Query("assetID")
-	if assetID == "" {
-		return nil, c.Status(400).SendString("AssetID is required")
-	}
-
-	// Convert assetID to ObjectID
-	objAssetID, err := primitive.ObjectIDFromHex(assetID)
-	if err != nil {
-		return nil, c.Status(400).SendString("Invalid AssetID")
-	}
-
-	startDate := c.Query("startDate")
-	endDate := c.Query("endDate")
-	page := c.QueryInt("page", 1)
-	pageSize := c.QueryInt("pageSize", 50)
-
+func (t *assetPriceRepository) GetAssetPriceHistory(assetID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error) {
 	if page < 1 {
 		page = 1
 	}
 	skip := (page - 1) * pageSize
 
-	// Parse startDate and endDate to time.Time
-	var parsedStartDate, parsedEndDate time.Time
-	if startDate != "" {
-		parsedStartDate, err = time.Parse("2006-01-02", startDate)
-		if err != nil {
-			return nil, c.Status(400).SendString("Invalid startDate format. Use YYYY-MM-DD")
-		}
-	}
-	if endDate != "" {
-		parsedEndDate, err = time.Parse("2006-01-02", endDate)
-		if err != nil {
-			return nil, c.Status(400).SendString("Invalid endDate format. Use YYYY-MM-DD")
-		}
-	}
-
 	// Build the filter
-	filter := bson.M{"assetID": objAssetID}
-	if !parsedStartDate.IsZero() && !parsedEndDate.IsZero() {
+	filter := bson.M{"assetID": assetID}
+	if !startDate.IsZero() && !endDate.IsZero() {
 		filter["timestamp"] = bson.M{
-			"$gte": parsedStartDate,
-			"$lte": parsedEndDate,
+			"$gte": startDate,
+			"$lte": endDate,
 		}
-	} else if !parsedStartDate.IsZero() {
-		filter["timestamp"] = bson.M{"$gte": parsedStartDate}
-	} else if !parsedEndDate.IsZero() {
-		filter["timestamp"] = bson.M{"$lte": parsedEndDate}
+	} else if !startDate.IsZero() {
+		filter["timestamp"] = bson.M{"$gte": startDate}
+	} else if !endDate.IsZero() {
+		filter["timestamp"] = bson.M{"$lte": endDate}
 	}
 
 	cursor, err := t.collection.Find(
-		c.Context(),
+		c,
 		filter,
 		options.Find().
 			SetSkip(int64(skip)).
@@ -115,13 +84,13 @@ func (t *assetPriceRepository) GetAssetPriceHistory(c *fiber.Ctx) (map[string]in
 			SetSort(bson.M{"timestamp": -1}),
 	)
 	if err != nil {
-		return nil, c.Status(500).SendString("Error fetching prices history")
+		//return nil, c.Status(500).SendString("Error fetching prices history")
 	}
-	defer cursor.Close(c.Context())
+	defer cursor.Close(c)
 
 	var prices []domain.AssetPrice
-	if err = cursor.All(c.Context(), &prices); err != nil {
-		return nil, c.Status(500).SendString("Error decoding prices history")
+	if err = cursor.All(c, &prices); err != nil {
+		//return nil, c.Status(500).SendString("Error decoding prices history")
 	}
 
 	mappedPrices := make([]map[string]interface{}, len(prices))
@@ -130,10 +99,7 @@ func (t *assetPriceRepository) GetAssetPriceHistory(c *fiber.Ctx) (map[string]in
 	}
 
 	// Include metadata if needed
-	total, err := t.collection.CountDocuments(c.Context(), filter)
-	if err != nil {
-		return nil, c.Status(500).SendString("Error counting total documents")
-	}
+	total, err := t.collection.CountDocuments(c, filter)
 
 	response := map[string]interface{}{
 		"data":     mappedPrices,
