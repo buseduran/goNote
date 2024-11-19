@@ -26,3 +26,6 @@ func (t *assetUseCase) UpdateAsset(assetID string, asset *domain.Asset) error {
 func (t *assetUseCase) GetAll() (*[]domain.Asset, error) {
 	return t.assetRepo.GetAll()
 }
+func (t *assetUseCase) CreateUserAsset(userAsset *domain.UserAsset) (*mongo.InsertOneResult, error) {
+	return t.assetRepo.CreateUserAsset(userAsset)
+}

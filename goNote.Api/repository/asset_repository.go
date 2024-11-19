@@ -69,3 +69,8 @@ func (t *assetRepository) GetAll() (*[]domain.Asset, error) {
 	}
 	return &assets, nil
 }
+func (t *assetRepository) CreateUserAsset(userAsset *domain.UserAsset) (*mongo.InsertOneResult, error) {
+	userAsset.CreatedAt = time.Now()
+	userAsset.UpdatedAt = time.Now()
+	return t.collection.InsertOne(context.Background(), userAsset)
+}

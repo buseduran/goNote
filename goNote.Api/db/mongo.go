@@ -20,6 +20,7 @@ type Collection struct {
 	UserCollection       *mongo.Collection
 	AssetCollection      *mongo.Collection
 	AssetPriceCollection *mongo.Collection
+	UserAssetCollection  *mongo.Collection
 }
 
 var (
@@ -56,5 +57,6 @@ func GetCollections() Collection {
 		UserCollection:       db.Collection(domain.CollectionUser),
 		AssetCollection:      db.Collection(domain.CollectionAsset),
 		AssetPriceCollection: db.Collection(domain.CollectionAssetPrice),
+		UserAssetCollection:  db.Collection(domain.CollectionUserAsset),
 	}
 }

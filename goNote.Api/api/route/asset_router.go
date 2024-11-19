@@ -2,6 +2,7 @@ package route
 
 import (
 	"github.com/buwud/goNote/api/controller"
+	"github.com/buwud/goNote/api/middleware"
 	"github.com/buwud/goNote/db"
 	"github.com/buwud/goNote/repository"
 	"github.com/buwud/goNote/usecase"
@@ -26,6 +27,7 @@ func NewAssetRouter(publicRouter fiber.Router) {
 	publicRouter.Delete("/asset/:id", assetController.DeleteAsset)
 	publicRouter.Patch("/asset/:id", assetController.UpdateAsset)
 	publicRouter.Get("/asset", assetController.GetAll)
+	publicRouter.Post("/asset/user", middleware.JWTProtected, assetController.CreateUserAsset)
 
 	//publicRouter.Put("/asset/:id", middleware.JWTProtected, assetController.UpdateAsset)
 	//publicRouter.Delete("/asset/:id", middleware.JWTProtected, assetController.DeleteAsset)
