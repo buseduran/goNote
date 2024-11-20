@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type assetRepository struct {
@@ -75,4 +76,49 @@ func (t *assetRepository) CreateUserAsset(userAsset *domain.UserAsset) (*mongo.I
 	return t.collection.InsertOne(context.Background(), userAsset)
 }
 
-//func (t *assetRepository) GetUserAssetPagination()
+func (t *assetRepository) GetUserAssetPagination(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error) {
+	if page < 1 {
+		page = 1
+	}
+	skip := (page - 1) * pageSize
+	filter := bson.M{"userID": userID}
+	if !startDate.IsZero() && !endDate.IsZero() {
+		filter["timestamp"] = bson.M{
+			"$gte": startDate,
+			"$lte": endDate,
+		}
+	} else if !startDate.IsZero() {
+		filter["timestamp"] = bson.M{"$gte": startDate}
+	} else if !endDate.IsZero() {
+		filter["timestamp"] = bson.M{"$lte": endDate}
+	}
+	cursor, err := t.collection.Find(
+		c,
+		filter,
+		options.Find().
+			SetSkip(int64(skip)).
+			SetLimit(int64(pageSize)).
+			SetSort(bson.M{"timestamp": -1}),
+	)
+	if err != nil {
+		//return error
+	}
+	defer cursor.Close(c)
+
+	var userAssets []domain.AssetPrice
+	if err = cursor.All(c, &userAssets); err != nil {
+		//return err
+	}
+	mappedUserAssets := make([]map[string]interface{}, len(userAssets))
+	for i, userAsset := range userAssets {
+		mappedUserAssets[i] = userAsset.ResponseMap()
+	}
+	total, err := t.collection.CountDocuments(c, filter)
+	response := map[string]interface{}{
+		"data":     mappedUserAssets,
+		"page":     page,
+		"pageSize": pageSize,
+		"total":    total,
+	}
+	return response, nil
+}

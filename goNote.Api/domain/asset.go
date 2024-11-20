@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"time"
 
 	"github.com/buwud/goNote/domain/constants/units"
@@ -38,6 +39,7 @@ type AssetRepository interface {
 	UpdateAsset(assetID string, asset *Asset) error
 	GetAll() (*[]Asset, error)
 	CreateUserAsset(userAsset *UserAsset) (*mongo.InsertOneResult, error)
+	GetUserAssetPagination(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error)
 }
 
 type AssetUseCase interface {
@@ -46,4 +48,5 @@ type AssetUseCase interface {
 	UpdateAsset(assetID string, asset *Asset) error
 	GetAll() (*[]Asset, error)
 	CreateUserAsset(userAsset *UserAsset) (*mongo.InsertOneResult, error)
+	GetUserAssetPagination(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error)
 }

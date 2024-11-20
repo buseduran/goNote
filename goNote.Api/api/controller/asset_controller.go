@@ -92,3 +92,37 @@ func (assetController *AssetController) CreateUserAsset(c *fiber.Ctx) error {
 	userAsset.ID = result.InsertedID.(primitive.ObjectID)
 	return c.Status(fiber.StatusOK).JSON(userAsset)
 }
+func (assetController *AssetController) GetUserAssetHistory(c *fiber.Ctx) error {
+	userID := c.Query("userID")
+	if userID == "" {
+		return c.Status(400).SendString("UserID is required")
+	}
+	//convert userID to objectID
+	objUserID, err := primitive.ObjectIDFromHex(userID)
+	if err != nil {
+		return c.Status(400).SendString("Invalid UserID")
+	}
+	startDate := c.Query("startDate")
+	endDate := c.Query("endDate")
+	page := c.QueryInt("page", 1)
+	pageSize := c.QueryInt("pageSize", 50)
+
+	var parsedStartDate, parsedEndDate time.Time
+	if startDate != "" {
+		parsedStartDate, err = time.Parse("2006-01-02", startDate)
+		if err != nil {
+			return c.Status(400).SendString("Invalid startDate format. Use YYYY-MM-DD")
+		}
+	}
+	if endDate != "" {
+		parsedEndDate, err = time.Parse("2006-01-02", endDate)
+		if err != nil {
+			return c.Status(400).SendString("Invalid endDate format. Use YYYY-MM-DD")
+		}
+	}
+	userAssets, err := assetController.AssetUseCase.GetUserAssetPagination(objUserID, parsedStartDate, parsedEndDate, page, pageSize, c.Context())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(200).JSON(userAssets)
+}
