@@ -63,8 +63,6 @@ func (assetController *AssetController) GetAll(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(assets)
 }
-
-// user assets
 func (assetController *AssetController) CreateUserAsset(c *fiber.Ctx) error {
 	createUserAsset := new(models.UserAsset)
 	if err := c.BodyParser(createUserAsset); err != nil {
@@ -120,9 +118,13 @@ func (assetController *AssetController) GetUserAssetHistory(c *fiber.Ctx) error 
 			return c.Status(400).SendString("Invalid endDate format. Use YYYY-MM-DD")
 		}
 	}
-	userAssets, err := assetController.AssetUseCase.GetUserAssetPagination(objUserID, parsedStartDate, parsedEndDate, page, pageSize, c.Context())
+	userAssets, err := assetController.AssetUseCase.GetUserAssetHistory(objUserID, parsedStartDate, parsedEndDate, page, pageSize, c.Context())
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 	return c.Status(200).JSON(userAssets)
 }
+
+// func (assetController *AssetController) UpdateUserAsset(c *fiber.Ctx) error {
+
+// }

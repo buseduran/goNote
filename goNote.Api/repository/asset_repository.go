@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/buwud/goNote/domain"
+	"github.com/buwud/goNote/domain/models"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -76,7 +77,7 @@ func (t *assetRepository) CreateUserAsset(userAsset *domain.UserAsset) (*mongo.I
 	return t.collection.InsertOne(context.Background(), userAsset)
 }
 
-func (t *assetRepository) GetUserAssetPagination(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error) {
+func (t *assetRepository) GetUserAssetHistory(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -121,4 +122,15 @@ func (t *assetRepository) GetUserAssetPagination(userID primitive.ObjectID, star
 		"total":    total,
 	}
 	return response, nil
+}
+func (t *assetRepository) UpdateUserAsset(userAssetID primitive.ObjectID, userAsset *models.UpdateUserAsset) error {
+	filter := bson.M{"_id": userAssetID}
+	update := bson.M{"$set": bson.M{
+		"amount": userAsset.Amount,
+	}}
+	_, err := t.collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return err
+	}
+	return nil
 }

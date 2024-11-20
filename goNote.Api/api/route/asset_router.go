@@ -27,9 +27,10 @@ func NewAssetRouter(publicRouter fiber.Router) {
 	publicRouter.Delete("/asset/:id", assetController.DeleteAsset)
 	publicRouter.Patch("/asset/:id", assetController.UpdateAsset)
 	publicRouter.Get("/asset", assetController.GetAll)
-	publicRouter.Post("/asset/user", middleware.JWTProtected, assetController.CreateUserAsset)
 
+	publicRouter.Post("/asset/user", middleware.JWTProtected, assetController.CreateUserAsset)
+	publicRouter.Get("/asset/user", middleware.JWTProtected, assetController.GetUserAssetHistory)
 	//publicRouter.Put("/asset/:id", middleware.JWTProtected, assetController.UpdateAsset)
-	//publicRouter.Delete("/asset/:id", middleware.JWTProtected, assetController.DeleteAsset)
+	//publicRouter.Delete("/asset/:id",  middleware.JWTProtected, assetController.DeleteAsset)
 	//publicRouter.Post("/asset", middleware.JWTProtected, assetController.CreateAsset)
 }

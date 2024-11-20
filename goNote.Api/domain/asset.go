@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/buwud/goNote/domain/constants/units"
+	"github.com/buwud/goNote/domain/models"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -39,7 +40,8 @@ type AssetRepository interface {
 	UpdateAsset(assetID string, asset *Asset) error
 	GetAll() (*[]Asset, error)
 	CreateUserAsset(userAsset *UserAsset) (*mongo.InsertOneResult, error)
-	GetUserAssetPagination(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error)
+	GetUserAssetHistory(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error)
+	UpdateUserAsset(userAssetID primitive.ObjectID, userAsset *models.UpdateUserAsset) error
 }
 
 type AssetUseCase interface {
@@ -48,5 +50,6 @@ type AssetUseCase interface {
 	UpdateAsset(assetID string, asset *Asset) error
 	GetAll() (*[]Asset, error)
 	CreateUserAsset(userAsset *UserAsset) (*mongo.InsertOneResult, error)
-	GetUserAssetPagination(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error)
+	GetUserAssetHistory(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error)
+	UpdateUserAsset(userAssetID primitive.ObjectID, userAsset *models.UpdateUserAsset) error
 }

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/buwud/goNote/domain"
+	"github.com/buwud/goNote/domain/models"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -33,6 +34,9 @@ func (t *assetUseCase) GetAll() (*[]domain.Asset, error) {
 func (t *assetUseCase) CreateUserAsset(userAsset *domain.UserAsset) (*mongo.InsertOneResult, error) {
 	return t.assetRepo.CreateUserAsset(userAsset)
 }
-func (t *assetUseCase) GetUserAssetPagination(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error) {
-	return t.assetRepo.GetUserAssetPagination(userID, startDate, endDate, page, pageSize, c)
+func (t *assetUseCase) GetUserAssetHistory(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error) {
+	return t.assetRepo.GetUserAssetHistory(userID, startDate, endDate, page, pageSize, c)
 }
+func (t *assetUseCase) UpdateUserAsset(userAssetID primitive.ObjectID, userAsset *models.UpdateUserAsset) error {
+	return t.assetRepo.UpdateUserAsset(userAssetID, userAsset)
+}                                                                                                                                                                                                                               
