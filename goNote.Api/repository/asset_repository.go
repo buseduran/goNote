@@ -71,12 +71,13 @@ func (t *assetRepository) GetAll() (*[]domain.Asset, error) {
 	}
 	return &assets, nil
 }
+
+// User Asset
 func (t *assetRepository) CreateUserAsset(userAsset *domain.UserAsset) (*mongo.InsertOneResult, error) {
 	userAsset.CreatedAt = time.Now()
 	userAsset.UpdatedAt = time.Now()
 	return t.collection.InsertOne(context.Background(), userAsset)
 }
-
 func (t *assetRepository) GetUserAssetHistory(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error) {
 	if page < 1 {
 		page = 1

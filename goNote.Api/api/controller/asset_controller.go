@@ -63,6 +63,8 @@ func (assetController *AssetController) GetAll(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(assets)
 }
+
+// User Asset
 func (assetController *AssetController) CreateUserAsset(c *fiber.Ctx) error {
 	createUserAsset := new(models.UserAsset)
 	if err := c.BodyParser(createUserAsset); err != nil {
@@ -144,6 +146,15 @@ func (assetController *AssetController) UpdateUserAsset(c *fiber.Ctx) error {
 	}
 	return c.Status(200).JSON(fiber.StatusOK)
 }
-func (assetController *AssetController) DeleteUserAsset(c *fiber.Ctx) {
-	//userAss
+func (assetController *AssetController) DeleteUserAsset(c *fiber.Ctx) error {
+	userAssetID := c.Params("id")
+	objUserAssetID, err := primitive.ObjectIDFromHex(userAssetID)
+	if err != nil {
+		return c.Status(400).SendString("Invalid UserAssetID")
+	}
+	err = assetController.AssetUseCase.DeleteUserAsset(objUserAssetID)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.SendStatus(fiber.StatusOK)
 }
