@@ -42,6 +42,7 @@ type AssetRepository interface {
 	CreateUserAsset(userAsset *UserAsset) (*mongo.InsertOneResult, error)
 	GetUserAssetHistory(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error)
 	UpdateUserAsset(userAssetID primitive.ObjectID, userAsset *models.UpdateUserAsset) error
+	DeleteUserAsset(userAssetID primitive.ObjectID) error
 }
 
 type AssetUseCase interface {
@@ -52,4 +53,5 @@ type AssetUseCase interface {
 	CreateUserAsset(userAsset *UserAsset) (*mongo.InsertOneResult, error)
 	GetUserAssetHistory(userID primitive.ObjectID, startDate time.Time, endDate time.Time, page int, pageSize int, c context.Context) (map[string]interface{}, error)
 	UpdateUserAsset(userAssetID primitive.ObjectID, userAsset *models.UpdateUserAsset) error
+	DeleteUserAsset(userAssetID primitive.ObjectID) error
 }

@@ -134,3 +134,11 @@ func (t *assetRepository) UpdateUserAsset(userAssetID primitive.ObjectID, userAs
 	}
 	return nil
 }
+func (t *assetRepository) DeleteUserAsset(userAssetID primitive.ObjectID) error {
+	filter := bson.M{"_id": userAssetID}
+	_, err := t.collection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -124,7 +124,26 @@ func (assetController *AssetController) GetUserAssetHistory(c *fiber.Ctx) error 
 	}
 	return c.Status(200).JSON(userAssets)
 }
+func (assetController *AssetController) UpdateUserAsset(c *fiber.Ctx) error {
+	userAssetID := c.Params("userAssetID")
+	objUserAssetID, err := primitive.ObjectIDFromHex(userAssetID)
+	if err != nil {
+		return c.Status(400).SendString("Invalid AssetID")
+	}
 
-// func (assetController *AssetController) UpdateUserAsset(c *fiber.Ctx) error {
-
-// }
+	userAsset := new(models.UpdateUserAsset)
+	if err := c.BodyParser(userAsset); err != nil {
+		return err
+	}
+	if userAsset.Amount == 0 {
+		return c.Status(400).JSON(fiber.Map{"error": "userAsset amount value cannot be empty"})
+	}
+	err = assetController.AssetUseCase.UpdateUserAsset(objUserAssetID, userAsset)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(200).JSON(fiber.StatusOK)
+}
+func (assetController *AssetController) DeleteUserAsset(c *fiber.Ctx) {
+	//userAss
+}

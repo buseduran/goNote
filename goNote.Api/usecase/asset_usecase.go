@@ -39,4 +39,7 @@ func (t *assetUseCase) GetUserAssetHistory(userID primitive.ObjectID, startDate 
 }
 func (t *assetUseCase) UpdateUserAsset(userAssetID primitive.ObjectID, userAsset *models.UpdateUserAsset) error {
 	return t.assetRepo.UpdateUserAsset(userAssetID, userAsset)
-}                                                                                                                                                                                                                               
+}
+func (t *assetUseCase) DeleteUserAsset(userAssetID primitive.ObjectID) error {
+	return t.assetRepo.DeleteUserAsset(userAssetID)
+}
