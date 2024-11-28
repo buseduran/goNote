@@ -12,7 +12,7 @@ type UserController struct {
 func (userController *UserController) SignUp(c *fiber.Ctx) error {
 	user := new(domain.UserSignup)
 	if err := c.BodyParser(user); err != nil {
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	result, err := userController.UserUseCase.SignUp(user)

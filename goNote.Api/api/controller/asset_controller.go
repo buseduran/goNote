@@ -3,6 +3,7 @@ package controller
 import (
 	"time"
 
+	errorw "github.com/buwud/goNote/api/errors"
 	"github.com/buwud/goNote/domain"
 	"github.com/buwud/goNote/domain/models"
 	"github.com/gofiber/fiber/v2"
@@ -16,44 +17,44 @@ type AssetController struct {
 func (assetController *AssetController) CreateAsset(c *fiber.Ctx) error {
 	asset := new(domain.Asset)
 	if err := c.BodyParser(asset); err != nil {
-		return err
+		return errorw.Invalid(c)
 	}
 	if asset.Name == "" {
-		return c.Status(400).JSON(fiber.Map{"error": "asset name cannot be empty"})
+		return errorw.NotEmpty(c)
 	}
 
 	result, err := assetController.AssetUseCase.CreateAsset(asset)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return errorw.CreateFailed(c)
 	}
 	if result == nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "asset not created"})
+		return errorw.CreateFailed(c)
 	}
 	asset.ID = result.InsertedID.(primitive.ObjectID)
-	return c.Status(fiber.StatusOK).JSON(asset)
+	return errorw.CreateSuccess(c)
 }
 func (assetController *AssetController) DeleteAsset(c *fiber.Ctx) error {
 	assetID := c.Params("id")
 	err := assetController.AssetUseCase.DeleteAsset(assetID, c)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		return errorw.DeleteFailed(c)
 	}
-	return c.SendStatus(fiber.StatusOK)
+	return errorw.DeleteSuccess(c)
 }
 func (assetController *AssetController) UpdateAsset(c *fiber.Ctx) error {
 	asset := new(domain.Asset)
 	if err := c.BodyParser(asset); err != nil {
-		return err
+		return errorw.BadRequest(c)
 	}
 	if asset.Name == "" {
-		return c.Status(400).JSON(fiber.Map{"error": "asset name cannot be empty"})
+		return errorw.NotEmpty(c)
 	}
 	assetID := c.Params("id")
 	err := assetController.AssetUseCase.UpdateAsset(assetID, asset)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		return errorw.UpdateFailed(c)
 	}
-	return c.Status(200).JSON(fiber.StatusOK)
+	return errorw.UpdateSuccess(c)
 }
 func (assetController *AssetController) GetAll(c *fiber.Ctx) error {
 	assets, err := assetController.AssetUseCase.GetAll()
