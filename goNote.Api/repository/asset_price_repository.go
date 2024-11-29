@@ -99,7 +99,7 @@ func (t *assetPriceRepository) GetAssetPriceHistory(assetID primitive.ObjectID, 
 	}
 
 	// Include metadata if needed
-	total, err := t.collection.CountDocuments(c, filter)
+	total, _ := t.collection.CountDocuments(c, filter)
 
 	response := map[string]interface{}{
 		"data":     mappedPrices,

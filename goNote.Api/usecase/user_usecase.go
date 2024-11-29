@@ -3,7 +3,6 @@ package usecase
 import (
 	"github.com/buwud/goNote/domain"
 	"github.com/gofiber/fiber/v2"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type userUseCase struct {
@@ -14,7 +13,7 @@ func NewUserUseCase(userRepo domain.UserRepository) (domain.UserUseCase, error) 
 	return &userUseCase{userRepo: userRepo}, nil
 }
 
-func (u *userUseCase) SignUp(user *domain.UserSignup) (*mongo.InsertOneResult, error) {
+func (u *userUseCase) SignUp(user *domain.UserSignup) error {
 	return u.userRepo.SignUp(user)
 }
 

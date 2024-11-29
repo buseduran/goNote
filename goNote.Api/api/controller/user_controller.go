@@ -16,11 +16,11 @@ func (userController *UserController) SignUp(c *fiber.Ctx) error {
 		return responser.InvalidBody(c)
 	}
 
-	result, err := userController.UserUseCase.SignUp(user)
+	err := userController.UserUseCase.SignUp(user)
 	if err != nil {
 		return responser.FailedLogin(c)
 	}
-	return c.Status(fiber.StatusOK).JSON(result)
+	return responser.SuccessfulSignup(c)
 }
 func (userController *UserController) SignIn(c *fiber.Ctx) error {
 	user := new(domain.UserSignin)

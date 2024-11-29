@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -50,13 +49,13 @@ func (user *User) ResponseMap() map[string]interface{} {
 }
 
 type UserRepository interface {
-	SignUp(user *UserSignup) (*mongo.InsertOneResult, error)
+	SignUp(user *UserSignup) error
 	SignIn(user *UserSignin, c *fiber.Ctx) error
 	SignOut(c *fiber.Ctx)
 }
 
 type UserUseCase interface {
-	SignUp(user *UserSignup) (*mongo.InsertOneResult, error)
+	SignUp(user *UserSignup) error
 	SignIn(user *UserSignin, c *fiber.Ctx) error
 	SignOut(c *fiber.Ctx)
 }

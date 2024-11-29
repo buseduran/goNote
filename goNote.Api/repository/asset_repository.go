@@ -115,7 +115,7 @@ func (t *assetRepository) GetUserAssetHistory(userID primitive.ObjectID, startDa
 	for i, userAsset := range userAssets {
 		mappedUserAssets[i] = userAsset.ResponseMap()
 	}
-	total, err := t.collection.CountDocuments(c, filter)
+	total, _ := t.collection.CountDocuments(c, filter)
 	response := map[string]interface{}{
 		"data":     mappedUserAssets,
 		"page":     page,

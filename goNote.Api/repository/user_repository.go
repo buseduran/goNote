@@ -20,7 +20,7 @@ func NewUserRepository(database *mongo.Collection) *userRepository {
 	return &userRepository{collection: database}
 }
 
-func (u *userRepository) SignUp(user *domain.UserSignup) (*mongo.InsertOneResult, error) {
+func (u *userRepository) SignUp(user *domain.UserSignup) error {
 	newUser := domain.User{
 		UserName:  user.Username,
 		Password:  utils.GeneratePassword(user.Password),
@@ -37,16 +37,16 @@ func (u *userRepository) SignUp(user *domain.UserSignup) (*mongo.InsertOneResult
 	err := u.collection.FindOne(context.Background(), filter).Decode(&existingUser)
 
 	if err == nil {
-		return nil, errors.New("username is taken")
+		return errors.New("username is taken")
 	}
 
 	//insert into db
-	result, err := u.collection.InsertOne(context.Background(), &newUser)
+	_, err = u.collection.InsertOne(context.Background(), &newUser)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return result, nil
+	return nil
 }
 func (u *userRepository) SignIn(user *domain.UserSignin, c *fiber.Ctx) error {
 	signedUser := domain.User{}
@@ -62,7 +62,6 @@ func (u *userRepository) SignIn(user *domain.UserSignin, c *fiber.Ctx) error {
 	}
 
 	//compare passwords and generate jwt token
-
 	if utils.ComparePassword(signedUser.Password, user.Password) {
 		err = utils.GenerateToken(signedUser.ID, c)
 		if err != nil {
