@@ -153,6 +153,13 @@ func SuccessfulLogin(c *fiber.Ctx) error {
 	})
 }
 
+// Failed Login
+func FailedLogin(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+		"error": "Invalid credentials. Please try again.",
+	})
+}
+
 // Successful Logout
 func SuccessfulLogout(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{

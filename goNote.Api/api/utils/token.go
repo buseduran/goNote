@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GenerateToken(id primitive.ObjectID, c *fiber.Ctx) (string, error) {
+func GenerateToken(id primitive.ObjectID, c *fiber.Ctx) error {
 
 	//generate jwt token
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -19,7 +19,7 @@ func GenerateToken(id primitive.ObjectID, c *fiber.Ctx) (string, error) {
 	secret := []byte(os.Getenv("JWT_SECRET"))
 	token, err := claims.SignedString(secret)
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	//set jwt token in cookie
@@ -33,7 +33,7 @@ func GenerateToken(id primitive.ObjectID, c *fiber.Ctx) (string, error) {
 	c.Cookie(&cookie)
 
 	// Authentication successful, return token
-	return token, nil
+	return nil
 }
 
 func VerifyToken(tokenString string) (bool, error) {

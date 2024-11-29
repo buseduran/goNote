@@ -1,6 +1,7 @@
 package controller
 
 import (
+	responser "github.com/buwud/goNote/api/errors"
 	"github.com/buwud/goNote/domain"
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,33 +13,30 @@ type UserController struct {
 func (userController *UserController) SignUp(c *fiber.Ctx) error {
 	user := new(domain.UserSignup)
 	if err := c.BodyParser(user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return responser.InvalidBody(c)
 	}
 
 	result, err := userController.UserUseCase.SignUp(user)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return responser.FailedLogin(c)
 	}
 	return c.Status(fiber.StatusOK).JSON(result)
 }
 func (userController *UserController) SignIn(c *fiber.Ctx) error {
 	user := new(domain.UserSignin)
 	if err := c.BodyParser(user); err != nil {
-		return err
+		return responser.InvalidBody(c)
 	}
 
-	token, err := userController.UserUseCase.SignIn(user, c)
+	err := userController.UserUseCase.SignIn(user, c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return responser.FailedLogin(c)
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "logged in",
-		"token":   token,
-	})
+	return responser.SuccessfulLogin(c)
 }
 
 func (userController *UserController) SignOut(c *fiber.Ctx) error {
 	userController.UserUseCase.SignOut(c)
-	return c.Status(fiber.StatusOK).JSON("signed out")
+	return responser.SuccessfulLogout(c)
 }
