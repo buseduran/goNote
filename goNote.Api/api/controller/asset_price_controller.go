@@ -3,6 +3,7 @@ package controller
 import (
 	"time"
 
+	responser "github.com/buwud/goNote/api/errors"
 	"github.com/buwud/goNote/domain"
 	"github.com/buwud/goNote/domain/models"
 	"github.com/gofiber/fiber/v2"
@@ -16,56 +17,57 @@ type AssetPriceController struct {
 func (assetPriceController *AssetPriceController) CreateAssetPrice(c *fiber.Ctx) error {
 	assetPrice := new(domain.AssetPrice)
 	if err := c.BodyParser(assetPrice); err != nil {
-		return err
+		return responser.Invalid(c)
 	}
 	if assetPrice.Currency == "" {
-		return c.Status(400).JSON(fiber.Map{"error": "assetPrice currency cannot be empty"})
+		return responser.NotEmpty(c)
 	}
 	if assetPrice.Price == 0 {
-		return c.Status(400).JSON(fiber.Map{"error": "assetPrice price value cannot be empty"})
+		return responser.NotEmpty(c)
 	}
 	result, err := assetPriceController.AssetPriceUseCase.CreateAssetPrice(assetPrice)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return responser.CreateFailed(c)
 	}
 	if result == nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "assetPrice not created"})
+		return responser.CreateFailed(c)
 	}
 	assetPrice.ID = result.InsertedID.(primitive.ObjectID)
-	return c.Status(fiber.StatusOK).JSON(assetPrice)
+	return responser.CreateSuccess(c)
 }
+
 func (assetPriceController *AssetPriceController) DeleteAssetPrice(c *fiber.Ctx) error {
 	assetPriceID := c.Params("id")
 	err := assetPriceController.AssetPriceUseCase.DeleteAssetPrice(assetPriceID, c)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		return responser.DeleteFailed(c)
 	}
-	return c.SendStatus(fiber.StatusOK)
+	return responser.CreateSuccess(c)
 }
 func (assetPriceController *AssetPriceController) UpdateAssetPrice(c *fiber.Ctx) error {
 	assetPrice := new(models.UpdateAssetPrice)
 	if err := c.BodyParser(assetPrice); err != nil {
-		return err
+		return responser.BadRequest(c)
 	}
 	if assetPrice.Price == 0 {
-		return c.Status(400).JSON(fiber.Map{"error": "assetPrice price value cannot be empty"})
+		return responser.NotEmpty(c)
 	}
 	assetPriceID := c.Params("id")
 	err := assetPriceController.AssetPriceUseCase.UpdateAssetPrice(assetPriceID, assetPrice)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		return responser.UpdateFailed(c)
 	}
-	return c.Status(200).JSON(fiber.StatusOK)
+	return responser.UpdateSuccess(c)
 }
 func (assetPriceController *AssetPriceController) GetAssetPriceHistory(c *fiber.Ctx) error {
 	assetID := c.Query("assetID")
 	if assetID == "" {
-		return c.Status(400).SendString("AssetID is required")
+		return responser.NotEmpty(c)
 	}
 	// Convert assetID to ObjectID
 	objAssetID, err := primitive.ObjectIDFromHex(assetID)
 	if err != nil {
-		return c.Status(400).SendString("Invalid AssetID")
+		return responser.InvalidID(c)
 	}
 	startDate := c.Query("startDate")
 	endDate := c.Query("endDate")
@@ -77,19 +79,19 @@ func (assetPriceController *AssetPriceController) GetAssetPriceHistory(c *fiber.
 	if startDate != "" {
 		parsedStartDate, err = time.Parse("2006-01-02", startDate)
 		if err != nil {
-			return c.Status(400).SendString("Invalid startDate format. Use YYYY-MM-DD")
+			return responser.InvalidDatetime(c)
 		}
 	}
 	if endDate != "" {
 		parsedEndDate, err = time.Parse("2006-01-02", endDate)
 		if err != nil {
-			return c.Status(400).SendString("Invalid endDate format. Use YYYY-MM-DD")
+			return responser.InvalidDatetime(c)
 		}
 	}
 
 	prices, err := assetPriceController.AssetPriceUseCase.GetAssetPriceHistory(objAssetID, parsedStartDate, parsedEndDate, page, pageSize, c.Context())
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return responser.FetchFailed(c)
 	}
-	return c.Status(200).JSON(prices)
+	return responser.FetchSuccess(c, prices)
 }
