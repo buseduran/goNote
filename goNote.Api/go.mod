@@ -10,7 +10,7 @@ require (
 	golang.org/x/crypto v0.31.0
 )
 
-require github.com/golang-jwt/jwt/v4 v4.0.0
+require github.com/golang-jwt/jwt/v4 v4.5.1
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
